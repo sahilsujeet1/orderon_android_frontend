@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/miHome"
+        android:title="@string/homeButton"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_round_home_24"/>
+
+    <item android:id="@+id/miLocation"
+        android:title="@string/locationButton"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_round_my_location_24"/>
+
+    <item android:id="@+id/placeholder"
+        app:showAsAction="ifRoom"
+        android:enabled="false"
+        android:title=""/>
+
+    <item android:id="@+id/miCart"
+        android:title="@string/cartButton"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_round_shopping_cart_24"/>
+
+    <item android:id="@+id/miUser"
+        android:title="@string/userButton"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_round_account_circle_24"/>
+
+</menu>
