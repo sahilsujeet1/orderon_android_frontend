@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +17,7 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView;
         HomeRecyclerViewAdapter homeAdapter;
+        FloatingActionButton storeTypeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,15 @@ public class MainActivity extends AppCompatActivity {
         setFoodScrollView();
         setGroceriesScrollView();
         setPharmacyScrollView();
+
+        storeTypeButton = findViewById(R.id.storeTypeButton);
+        storeTypeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Store_Type_Options storeTypeFragment = new Store_Type_Options();
+                storeTypeFragment.show(getSupportFragmentManager(), "storeTypeFragment");
+            }
+        });
 
     }
 
