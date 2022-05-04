@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="#00000000"
-    tools:context=".Store_Type_Options">
+    tools:context=".StoreTypeOptions">
 
 
     <Button

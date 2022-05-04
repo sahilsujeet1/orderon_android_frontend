@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         storeTypeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Store_Type_Options storeTypeFragment = new Store_Type_Options();
+                StoreTypeOptions storeTypeFragment = new StoreTypeOptions();
                 storeTypeFragment.show(getSupportFragmentManager(), "storeTypeFragment");
             }
         });

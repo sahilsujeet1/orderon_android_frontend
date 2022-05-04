@@ -39,7 +39,6 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
         Log.d(TAG, "onBindViewHolder holder");
 
         holder.image.setImageResource(itemURLs.get(position));
-
         holder.itemName.setText(itemNames.get(position));
     }
 

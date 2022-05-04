@@ -13,10 +13,10 @@ import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Store_Type_Options#newInstance} factory method to
+ * Use the {@link StoreTypeOptions#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Store_Type_Options extends DialogFragment {
+public class StoreTypeOptions extends DialogFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,7 +31,7 @@ public class Store_Type_Options extends DialogFragment {
     private String mParam1;
     private String mParam2;
 
-    public Store_Type_Options() {
+    public StoreTypeOptions() {
         // Required empty public constructor
     }
 
@@ -44,8 +44,8 @@ public class Store_Type_Options extends DialogFragment {
      * @return A new instance of fragment Store_Type_Options.
      */
     // TODO: Rename and change types and number of parameters
-    public static Store_Type_Options newInstance(String param1, String param2) {
-        Store_Type_Options fragment = new Store_Type_Options();
+    public static StoreTypeOptions newInstance(String param1, String param2) {
+        StoreTypeOptions fragment = new StoreTypeOptions();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -73,13 +73,22 @@ public class Store_Type_Options extends DialogFragment {
         groceries = view.findViewById(R.id.groceriesType);
         pharmacy = view.findViewById(R.id.pharmacyType);
 
-        restaurant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent storeIntent = new Intent();
-            }
-        });
+        openStoreActivity(restaurant, "restaurant");
+        openStoreActivity(groceries, "groceries");
+        openStoreActivity(pharmacy, "pharmacy");
 
         return view;
+    }
+
+
+    void openStoreActivity(Button btn, String type) {
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent storeIntent = new Intent(getActivity(), StoresList.class);
+                storeIntent.putExtra("type", type);
+                startActivity(storeIntent);
+            }
+        });
     }
 }
