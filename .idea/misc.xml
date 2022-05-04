@@ -8,9 +8,16 @@
         <entry key="app/src/main/res/drawable/ic_round_keyboard_arrow_up_24.xml" value="0.1685" />
         <entry key="app/src/main/res/drawable/round_corner_layout.xml" value="0.1895" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/activity_stores_list.xml" value="0.20373457819273091" />
+        <entry key="app/src/main/res/layout/activity_stores_list.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_store__type__options.xml" value="0.15625" />
+        <entry key="app/src/main/res/layout/fragment_store_menu.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_store_type_options.xml" value="0.3182291666666667" />
+        <entry key="app/src/main/res/layout/fragment_stores_list1.xml" value="0.3182291666666667" />
+        <entry key="app/src/main/res/layout/home.xml" value="0.3182291666666667" />
         <entry key="app/src/main/res/layout/home_display_scroll_layout.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/menu_item.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/store_card.xml" value="0.3182291666666667" />
         <entry key="app/src/main/res/layout/store_list.xml" value="0.25" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.33" />
       </map>

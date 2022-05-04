@@ -2,35 +2,42 @@ package com.projects.orderon;
 
 import android.os.Bundle;
 
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+
+import java.util.ArrayList;
+
+import models.MenuItem;
+import models.Store;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link StoreTypeOptions#newInstance} factory method to
+ * Use the {@link StoreMenu#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class StoreTypeOptions extends DialogFragment {
+public class StoreMenu extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    Button restaurant;
-    Button groceries;
-    Button pharmacy;
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    public StoreTypeOptions() {
+    View view;
+    MenuRecyclerViewAdapter menuAdapter;
+
+    ArrayList<MenuItem> items;
+
+    public StoreMenu() {
         // Required empty public constructor
     }
 
@@ -40,11 +47,11 @@ public class StoreTypeOptions extends DialogFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Store_Type_Options.
+     * @return A new instance of fragment StoreMenu.
      */
     // TODO: Rename and change types and number of parameters
-    public static StoreTypeOptions newInstance(String param1, String param2) {
-        StoreTypeOptions fragment = new StoreTypeOptions();
+    public static StoreMenu newInstance(String param1, String param2) {
+        StoreMenu fragment = new StoreMenu();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -55,7 +62,6 @@ public class StoreTypeOptions extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -66,35 +72,26 @@ public class StoreTypeOptions extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_store_type_options, container, false);
+        view = inflater.inflate(R.layout.fragment_store_menu, container, false);
 
-        restaurant = view.findViewById(R.id.restaurantType);
-        groceries = view.findViewById(R.id.groceriesType);
-        pharmacy = view.findViewById(R.id.pharmacyType);
-
-        openStoreActivity(restaurant, "restaurant");
-        openStoreActivity(groceries, "groceries");
-        openStoreActivity(pharmacy, "pharmacy");
+        getItems();
 
         return view;
     }
 
+    void getItems() {
+        RecyclerView recyclerView = view.findViewById(R.id.menuRecyclerView);
 
-    void openStoreActivity(Button btn, String type) {
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        items = new ArrayList<MenuItem>();
+        items.add(new MenuItem("Chicken Biryani", "Steamed rice with veggies or meat option with explosion of flavours", 160, R.drawable.biryani));
+        items.add(new MenuItem("Salad", "Freshly chopped vegetables with a mix of Indian spices", 100, R.drawable.salad));
+        items.add(new MenuItem("Paneer Butter Masala", "A little sweet paneer dish in a lot of butter", 230, R.drawable.north_indian));
 
-                Bundle bundle = new Bundle();
-                bundle.putString("type", type);
-                getParentFragmentManager().setFragmentResult("type", bundle);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new StoresList())
-                        .addToBackStack(null).commit();
-                dismiss();
-
-            }
-        });
+        menuAdapter = new MenuRecyclerViewAdapter(view.getContext(), items);
+        recyclerView.setAdapter(menuAdapter);
     }
 }
