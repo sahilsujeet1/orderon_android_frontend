@@ -66,10 +66,10 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
             itemName = itemView.findViewById(R.id.itemName);
             itemDesc = itemView.findViewById(R.id.itemDesc);
             price = itemView.findViewById(R.id.price);
-            qty = itemView.findViewById(R.id.itemQuantity);
+            qty = itemView.findViewById(R.id.cartItemQuantity);
 
-            remove = itemView.findViewById(R.id.removeItem);
-            add = itemView.findViewById(R.id.addItem);
+            remove = itemView.findViewById(R.id.cartRemoveItem);
+            add = itemView.findViewById(R.id.cartAddItem);
 
             remove.setOnClickListener(new View.OnClickListener() {
                 @Override

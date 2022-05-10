@@ -75,27 +75,27 @@
                 android:layout_marginLeft="12dp"
                 android:layout_marginStart="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/removeItem"
+                app:layout_constraintEnd_toStartOf="@+id/cartRemoveItem"
                 app:layout_constraintHorizontal_bias="0.333"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
             <ImageButton
-                android:id="@+id/removeItem"
+                android:id="@+id/cartRemoveItem"
                 android:layout_width="23dp"
                 android:layout_height="23dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:backgroundTint="@android:color/transparent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/itemQuantity"
+                app:layout_constraintEnd_toStartOf="@+id/cartItemQuantity"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.529"
                 app:srcCompat="@drawable/minus" />
 
             <TextView
-                android:id="@+id/itemQuantity"
+                android:id="@+id/cartItemQuantity"
                 android:layout_width="24dp"
                 android:layout_height="22dp"
                 android:layout_marginEnd="8dp"
@@ -104,11 +104,11 @@
                 android:textSize="16dp"
                 android:textColor="#474343"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/addItem"
+                app:layout_constraintEnd_toStartOf="@+id/cartAddItem"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
-                android:id="@+id/addItem"
+                android:id="@+id/cartAddItem"
                 android:layout_width="23dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="4dp"

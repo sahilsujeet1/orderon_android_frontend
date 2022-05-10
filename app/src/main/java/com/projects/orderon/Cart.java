@@ -3,10 +3,18 @@ package com.projects.orderon;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import models.CartItem;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +31,9 @@ public class Cart extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private CartRecyclerViewAdapter cartAdapter;
+    private View view;
 
     public Cart() {
         // Required empty public constructor
@@ -59,6 +70,25 @@ public class Cart extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cart, container, false);
+        view = inflater.inflate(R.layout.fragment_cart, container, false);
+
+        getCartItems();
+
+        return view;
+    }
+
+    public void getCartItems() {
+        RecyclerView recyclerView = view.findViewById(R.id.cartRecyclerView);
+
+        ArrayList<CartItem> cartItems = new ArrayList<CartItem>();
+        cartItems.add(new CartItem("Salad", "Fresh veggies and fruits rich in nutrients", 99, 1, R.drawable.salad));
+        cartItems.add(new CartItem("Paracetamol", "Efficient in fever and body pain", 79, 1, R.drawable.paracetamol));
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        cartAdapter = new CartRecyclerViewAdapter(view.getContext(), cartItems);
+        recyclerView.setAdapter(cartAdapter);
     }
 }

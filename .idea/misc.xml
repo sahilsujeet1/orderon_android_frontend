@@ -4,12 +4,15 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/bottom_round_corner_card_layout.xml" value="0.321" />
+        <entry key="app/src/main/res/drawable/delete_bin.xml" value="0.2985" />
         <entry key="app/src/main/res/drawable/ic_round_home_24.xml" value="0.1685" />
         <entry key="app/src/main/res/drawable/ic_round_keyboard_arrow_up_24.xml" value="0.1685" />
         <entry key="app/src/main/res/drawable/ic_round_shopping_cart_24.xml" value="0.321" />
         <entry key="app/src/main/res/drawable/round_corner_layout.xml" value="0.1895" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_stores_list.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/cart_item.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_cart.xml" value="0.2234375" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_order_history.xml" value="0.3182291666666667" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.3182291666666667" />
