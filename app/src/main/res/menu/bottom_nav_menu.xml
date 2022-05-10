@@ -7,10 +7,10 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_round_home_24"/>
 
-    <item android:id="@+id/miLocation"
-        android:title="@string/locationButton"
+    <item android:id="@+id/miOrderHistory"
+        android:title="@string/orderHistoryButton"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_round_my_location_24"/>
+        android:icon="@drawable/order_history"/>
 
     <item android:id="@+id/placeholder"
         app:showAsAction="ifRoom"

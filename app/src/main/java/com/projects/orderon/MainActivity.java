@@ -1,21 +1,17 @@
 package com.projects.orderon;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
         BottomNavigationView bottomNavigationView;
         FloatingActionButton storeTypeButton;
 
@@ -26,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setBackgroundColor(0);
+        bottomNavigationView.setOnNavigationItemSelectedListener(MainActivity.this);
+        bottomNavigationView.setSelectedItemId(R.id.miHome);
 
         FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
         fragTrans.add(R.id.fragment_container, new HomeFragment());
@@ -42,4 +40,27 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.miHome:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+                return true;
+
+            case R.id.miOrderHistory:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new OrderHistory()).commit();
+                return true;
+
+            case R.id.miCart:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Cart()).commit();
+                return true;
+
+            case R.id.miUser:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Profile()).commit();
+                return true;
+        }
+
+        return false;
+    }
 }

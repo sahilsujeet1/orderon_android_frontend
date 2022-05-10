@@ -2,7 +2,7 @@
     <string name="app_name">Order On</string>
     <string name="moto">One Place for all your needs</string>
     <string name="homeButton">Home</string>
-    <string name="locationButton">Location</string>
+    <string name="orderHistoryButton">Your Orders</string>
     <string name="cartButton">Cart</string>
     <string name="userButton">User</string>
     <string name="logo_desc">logo</string>
