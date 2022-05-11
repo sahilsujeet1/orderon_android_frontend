@@ -50,16 +50,14 @@
 
         <ScrollView
             android:id="@+id/home_screen_scroll"
-            android:layout_width="400dp"
-            android:layout_height="577dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginRight="5dp">
+            android:layout_width="match_parent"
+            android:layout_height="535dp"
+            android:padding="10dp">
 
             <LinearLayout
                 android:id="@+id/homeContentLinearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="595dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -67,14 +65,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="342dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/bottom_round_corner_card_layout"
+                    android:background="@drawable/order_item_bg"
                     android:padding="10dp">
-
 
                     <TextView
                         android:id="@+id/cartTotalQty"

@@ -38,8 +38,8 @@ public class OrderItemRecyclerAdapter extends RecyclerView.Adapter<OrderItemRecy
         Log.d(TAG, item.getItemName());
         holder.itemName.setText(item.getItemName());
         holder.seller.setText(item.getSeller());
-        holder.qty.setText(Integer.toString(item.getQty()));
-        holder.amount.setText(Integer.toString(item.getAmount()));
+        holder.qty.setText("Qty: " + Integer.toString(item.getQty()));
+        holder.amount.setText("Price: " + Integer.toString(item.getAmount()));
         holder.img.setImageResource(item.getImgURL());
     }
 
