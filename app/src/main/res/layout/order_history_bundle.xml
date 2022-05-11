@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/order_bundle_bg"
+    android:layout_marginBottom="10dp">
 
     <TextView
         android:id="@+id/orderID"
@@ -14,6 +16,7 @@
         android:layout_marginTop="4dp"
         android:text="Order ID: ODabcds22342"
         android:textSize="11sp"
+        android:textColor="@color/textColor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,6 +29,7 @@
         android:layout_marginRight="52dp"
         android:text="Date: 05-05-2022"
         android:textSize="11sp"
+        android:textColor="@color/textColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,6 +41,7 @@
         android:layout_marginRight="60dp"
         android:text="Payment Mode: COD"
         android:textSize="11sp"
+        android:textColor="@color/textColor"
         app:layout_constraintBottom_toTopOf="@+id/orderItemsRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/orderDate"
@@ -51,17 +56,17 @@
         android:layout_marginTop="4dp"
         android:text="Manpur, Gaya, Bihar - 823003"
         android:textSize="11sp"
+        android:textColor="@color/textColor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/orderID" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/orderItemsRecyclerView"
-        android:layout_width="395dp"
-        android:layout_height="201dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.481"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shippingAddress" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -56,22 +56,21 @@
 
         <ScrollView
             android:id="@+id/home_screen_scroll"
-            android:layout_width="400dp"
-            android:layout_height="577dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginRight="5dp">
+            android:layout_width="match_parent"
+            android:layout_height="535dp"
+            android:layout_margin="10dp"
+            android:scrollbars="none">
 
             <LinearLayout
                 android:id="@+id/homeContentLinearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="595dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/orderHistoryRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="523dp" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
         </ScrollView>
@@ -80,5 +79,3 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!--</FrameLayout>-->
