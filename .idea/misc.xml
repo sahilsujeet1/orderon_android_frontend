@@ -13,6 +13,7 @@
         <entry key="app/src/main/res/drawable/order_bundle_bg.xml" value="0.23" />
         <entry key="app/src/main/res/drawable/order_item_bg.xml" value="0.23" />
         <entry key="app/src/main/res/drawable/round_corner_layout.xml" value="0.1895" />
+        <entry key="app/src/main/res/drawable/store_card_bg.xml" value="0.318" />
         <entry key="app/src/main/res/layout-w1240dp/activity_login.xml" value="0.265234375" />
         <entry key="app/src/main/res/layout-w936dp/activity_login.xml" value="0.238671875" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3182291666666667" />
@@ -36,7 +37,7 @@
         <entry key="app/src/main/res/layout/menu_item.xml" value="0.5" />
         <entry key="app/src/main/res/layout/order_history_bundle.xml" value="0.5" />
         <entry key="app/src/main/res/layout/order_history_item.xml" value="0.5" />
-        <entry key="app/src/main/res/layout/store_card.xml" value="0.3182291666666667" />
+        <entry key="app/src/main/res/layout/store_card.xml" value="0.67" />
         <entry key="app/src/main/res/layout/store_list.xml" value="0.25" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.33" />
       </map>
