@@ -1,5 +1,7 @@
 package com.projects.orderon;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
@@ -67,6 +69,7 @@ public class StoreTypeOptions extends DialogFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_store_type_options, container, false);
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         restaurant = view.findViewById(R.id.restaurantType);
         groceries = view.findViewById(R.id.groceriesType);
@@ -90,8 +93,7 @@ public class StoreTypeOptions extends DialogFragment {
                 getParentFragmentManager().setFragmentResult("type", bundle);
 
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new StoresList())
-                        .addToBackStack(null).commit();
+                        .replace(R.id.fragment_container, new StoresList()).addToBackStack("storeTypeMenu").commit();
                 dismiss();
 
             }

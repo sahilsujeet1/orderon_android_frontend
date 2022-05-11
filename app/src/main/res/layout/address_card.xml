@@ -2,37 +2,49 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#E9F3DF"
-    android:layout_margin="5dp">
+    android:background="@drawable/order_item_bg"
+    android:padding="8dp"
+    android:layout_marginBottom="10dp">
+
 
     <TextView
         android:id="@+id/fullAddress"
-        android:layout_width="311dp"
-        android:layout_height="64dp"
-        android:text="XYZ, ABC"
-        app:flow_wrapMode="aligned"
-        android:textColor="#474343"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:fontFamily="@font/ubuntu_medium"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:maxWidth="280dp"
+        android:text="XYZ, ABC"
+        android:textColor="@color/textColor"
+        app:flow_wrapMode="aligned"
         app:layout_constraintEnd_toStartOf="@+id/deleteSavedAddBtn"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/deleteSavedAddBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
         android:backgroundTint="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.523"
         app:srcCompat="@drawable/delete_bin" />
+
+    <TextView
+        android:id="@+id/mobNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/ubuntu_medium"
+        android:text="Mob: 1234567890"
+        android:textColor="@color/textColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/deleteSavedAddBtn"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fullAddress" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,4 +19,7 @@
     <style name="roundedImageView" parent="">
         <item name="cornerSize">15%</item>
     </style>
+    <style name="circluarImage" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>
