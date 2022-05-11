@@ -72,7 +72,7 @@
                     android:layout_width="342dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:background="#E9F3DF"
+                    android:background="@drawable/bottom_round_corner_card_layout"
                     android:padding="10dp">
 
 
@@ -81,7 +81,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Total Quantity: "
-                        android:textColor="#474343"
+                        android:textColor="@color/textColor"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -91,7 +91,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="7dp"
                         android:text="Total Amount: Rs."
-                        android:textColor="#474343"
+                        android:textColor="@color/textColor"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/cartTotalQty" />
@@ -103,7 +103,7 @@
                         android:layout_marginStart="4dp"
                         android:layout_marginLeft="4dp"
                         android:text="250"
-                        android:textColor="#474343"
+                        android:textColor="@color/textColorSecondary"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@+id/cartTotalQtyValue"
                         app:layout_constraintStart_toEndOf="@+id/cartTotalAmount"
@@ -128,7 +128,7 @@
                         android:layout_marginStart="36dp"
                         android:layout_marginLeft="36dp"
                         android:text="2"
-                        android:textColor="#474343"
+                        android:textColor="@color/textColorSecondary"
                         app:layout_constraintStart_toEndOf="@+id/cartTotalQty"
                         app:layout_constraintTop_toTopOf="parent" />
 

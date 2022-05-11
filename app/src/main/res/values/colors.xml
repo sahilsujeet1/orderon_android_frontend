@@ -2,6 +2,8 @@
 <resources>
     <color name="colorPrimary">#99E625</color>
     <color name="colorPrimaryAccent">#E9F3DF</color>
+    <color name="textColor">#474343</color>
+    <color name="textColorSecondary">#BA292929</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
