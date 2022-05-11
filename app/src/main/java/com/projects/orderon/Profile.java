@@ -3,17 +3,24 @@ package com.projects.orderon;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+
+import models.Address;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link Profile#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Profile extends Fragment {
+public class Profile extends Fragment implements RecyclerViewInterface {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,6 +30,9 @@ public class Profile extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private View view;
+    private SavedAddressRecyclerAdapter addressAdapter;
 
     public Profile() {
         // Required empty public constructor
@@ -59,6 +69,30 @@ public class Profile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        getSavedAddresses();
+        return view;
+    }
+
+    void getSavedAddresses() {
+        RecyclerView savedAddRecyclerView = view.findViewById(R.id.savedAddRecyclerView);
+
+        ArrayList<Address> addresses = new ArrayList<>();
+        addresses.add(new Address("Manpur Patwatoli", "Gaya", "Bihar", "Buniyadganj", "823003"));
+        addresses.add(new Address("Chandigarh University", "Mohali", "Punjab", "SAS Nagar", "140413"));
+        addresses.add(new Address("Manpur Patwatoli2", "Gaya2", "Biha2r", "Buniyadganj2", "823003"));
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
+        savedAddRecyclerView.setLayoutManager(layoutManager);
+        savedAddRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        addressAdapter = new SavedAddressRecyclerAdapter(view.getContext(), addresses, this);
+        savedAddRecyclerView.setAdapter(addressAdapter);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+
     }
 }

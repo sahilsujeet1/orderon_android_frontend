@@ -27,11 +27,11 @@
         tools:ignore="ImageContrastCheck" />
 
     <TextView
-        android:id="@+id/moto"
+        android:id="@+id/profileHeading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ubuntu_medium"
-        android:text="@string/moto"
+        android:text="Profile"
         android:textColor="@color/colorPrimary"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/homeScrollLinearLayout"
@@ -42,7 +42,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <LinearLayout
-        android:id="@+id/homeScrollLinearLayout"
+        android:id="@+id/profileScrollLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="595dp"
         android:background="@drawable/top_round_corner_layout"
@@ -55,7 +55,7 @@
         app:layout_constraintVertical_bias="1.0">
 
         <ScrollView
-            android:id="@+id/home_screen_scroll"
+            android:id="@+id/profile_screen_scroll"
             android:layout_width="400dp"
             android:layout_height="577dp"
             android:layout_marginLeft="5dp"
@@ -63,12 +63,82 @@
             android:layout_marginRight="5dp">
 
             <LinearLayout
-                android:id="@+id/homeContentLinearLayout"
+                android:id="@+id/profileContentLinearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="595dp"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/shapeableImageView"
+                        android:layout_width="65dp"
+                        android:layout_height="65dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginLeft="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0"
+                        app:srcCompat="@drawable/ic_launcher_foreground" />
+
+                    <TextView
+                        android:id="@+id/profileName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="40dp"
+                        android:layout_marginLeft="40dp"
+                        android:text="Sahil Kumar"
+                        android:textColor="#474343"
+                        app:layout_constraintStart_toEndOf="@+id/shapeableImageView"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/profileEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="40dp"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginTop="4dp"
+                        android:textColor="#474343"
+                        android:text="19bcs2029@gmail.com"
+                        app:layout_constraintStart_toEndOf="@+id/shapeableImageView"
+                        app:layout_constraintTop_toBottomOf="@+id/profileName" />
+
+                    <TextView
+                        android:id="@+id/logoutBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="40dp"
+                        android:layout_marginLeft="40dp"
+                        android:text="Logout"
+                        android:textColor="#D85029"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/shapeableImageView"
+                        app:layout_constraintTop_toBottomOf="@+id/profileEmail"
+                        app:layout_constraintVertical_bias="1.0" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/savedAddHeading"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:fontFamily="@font/ubuntu_medium"
+                    android:text="Saved Addresses"
+                    android:textColor="#474343"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/savedAddRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="3dp"/>
             </LinearLayout>
         </ScrollView>
 
