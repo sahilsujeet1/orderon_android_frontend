@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 
 import models.Address;
@@ -31,6 +34,8 @@ public class Profile extends Fragment implements RecyclerViewInterface {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private FirebaseAuth mAuth;
 
     private View view;
     private SavedAddressRecyclerAdapter addressAdapter;
@@ -60,6 +65,9 @@ public class Profile extends Fragment implements RecyclerViewInterface {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mAuth = FirebaseAuth.getInstance();
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -77,12 +85,27 @@ public class Profile extends Fragment implements RecyclerViewInterface {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Login()).addToBackStack("Login").commit();
+                mAuth.signOut();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new Login()).addToBackStack("profile").commit();
             }
         });
 
         getSavedAddresses();
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            currentUser.reload();
+        } else {
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new Login()).addToBackStack("profile").commit();
+
+        }
     }
 
     void getSavedAddresses() {

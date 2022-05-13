@@ -2,11 +2,30 @@ package com.projects.orderon;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import models.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,14 +34,18 @@ import android.view.ViewGroup;
  */
 public class Signup extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private View view;
+    private static final String TAG = "signupFragment";
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String name, email, password;
+    private EditText nameI, emailI, passwordI;
+    private Button signupBtn;
+    private ProgressBar progressBar;
+
+    private FirebaseAuth mAuth;
 
     public Signup() {
         // Required empty public constructor
@@ -49,16 +72,89 @@ public class Signup extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_signup, container, false);
+        view = inflater.inflate(R.layout.fragment_signup, container, false);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        nameI = view.findViewById(R.id.signupFullNameInput);
+        emailI = view.findViewById(R.id.signupEmailInput);
+        passwordI = view.findViewById(R.id.signupPasswordInput);
+        signupBtn = view.findViewById(R.id.signupButton);
+        progressBar = view.findViewById(R.id.signupProgressBar);
+
+        signupBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                name = nameI.getText().toString();
+                email = emailI.getText().toString();
+                password = passwordI.getText().toString();
+
+                if(validate(view)) {
+//                    fs.signup(name, email, password, TAG, progressBar);
+                    signUp();
+                }
+            }
+        });
+
+        return view;
+    }
+
+    public void signUp() {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser fUser = mAuth.getCurrentUser();
+                            User user = new User(name, email, "customer", "", fUser.getUid(), Timestamp.now());
+
+                            FirebaseFirestore.getInstance().collection("users").document(mAuth.getUid())
+                                    .set(user.getUser()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    progressBar.setVisibility(View.GONE);
+                                    Toast.makeText(getView().getContext(), "User created succesfully",
+                                            Toast.LENGTH_SHORT).show();
+
+                                    getActivity().getSupportFragmentManager().beginTransaction()
+                                            .replace(R.id.fragment_container, new Profile()).commit();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    progressBar.setVisibility(View.GONE);
+                                    Toast.makeText(getView().getContext(), "User data not stored!",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(getView().getContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
+                });
+    }
+
+    public boolean validate(View view) {
+        boolean isValid = false;
+
+        if(!TextUtils.isEmpty(name)) {
+            if(!TextUtils.isEmpty(email)) {
+                if(!TextUtils.isEmpty(password))
+                    isValid = true;
+            }
+        }
+
+        return isValid;
     }
 }

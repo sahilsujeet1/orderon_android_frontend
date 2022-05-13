@@ -2,12 +2,22 @@ package com.projects.orderon;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,6 +36,13 @@ public class Login extends Fragment {
     private String mParam2;
 
     private View view;
+
+    private EditText emailI, passwordI;
+    private TextView signup;
+    private String email, password;
+    private Button loginBtn;
+
+    private FirebaseAuth mAuth;
 
     public Login() {
         // Required empty public constructor
@@ -52,10 +69,7 @@ public class Login extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -63,7 +77,34 @@ public class Login extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view =  inflater.inflate(R.layout.fragment_login, container, false);
-        TextView signup = view.findViewById(R.id.signUpBtn);
+
+        emailI = view.findViewById(R.id.loginEmailInput);
+        passwordI = view.findViewById(R.id.loginPasswordInput);
+        loginBtn = view.findViewById(R.id.loginButton);
+        signup = view.findViewById(R.id.signUpBtn);
+
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                email = emailI.getText().toString();
+                password = passwordI.getText().toString();
+
+                if(validate(view)) {
+                    mAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        @Override
+                        public void onSuccess(AuthResult authResult) {
+                            Toast.makeText(view.getContext(), "Logged in successfully.", Toast.LENGTH_SHORT).show();
+                            getActivity().getSupportFragmentManager().popBackStack();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(view.getContext(), "Logging in failed.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,5 +114,15 @@ public class Login extends Fragment {
         });
 
         return view;
+    }
+
+    public boolean validate(View view) {
+        boolean isValid = false;
+
+        if(!TextUtils.isEmpty(email)) {
+            if(!TextUtils.isEmpty(password))
+                isValid = true;
+        }
+        return isValid;
     }
 }

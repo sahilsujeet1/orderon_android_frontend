@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "701255776387",
+    "project_id": "order-on-f896e",
+    "storage_bucket": "order-on-f896e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:701255776387:android:62e2880907203d429203b6",
+        "android_client_info": {
+          "package_name": "com.projects.orderon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "701255776387-ekp8au0qtlfpcko5spfj8l3vh6plg6im.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH6P6WUumECcZhuqOmUSPqgb4IAC7p-DM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "701255776387-ekp8au0qtlfpcko5spfj8l3vh6plg6im.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
