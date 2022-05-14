@@ -10,13 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import models.Order;
-import models.OrderItem;
-import models.Store;
+import com.projects.orderon.models.Order;
+import com.projects.orderon.models.OrderItem;
 
 /**
  * A simple {@link Fragment} subclass.

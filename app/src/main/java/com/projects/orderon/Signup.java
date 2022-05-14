@@ -23,9 +23,10 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import models.User;
+import com.projects.orderon.models.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -106,6 +107,7 @@ public class Signup extends Fragment {
     }
 
     public void signUp() {
+        progressBar.setVisibility(View.VISIBLE);
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -113,27 +115,43 @@ public class Signup extends Fragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser fUser = mAuth.getCurrentUser();
-                            User user = new User(name, email, "customer", "", fUser.getUid(), Timestamp.now());
 
-                            FirebaseFirestore.getInstance().collection("users").document(mAuth.getUid())
-                                    .set(user.getUser()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(name).build();
+                            fUser.updateProfile(profileChangeRequest).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    progressBar.setVisibility(View.GONE);
-                                    Toast.makeText(getView().getContext(), "User created succesfully",
-                                            Toast.LENGTH_SHORT).show();
+                                    User user = new User(name, email, "customer", "", fUser.getUid(), Timestamp.now());
 
-                                    getActivity().getSupportFragmentManager().beginTransaction()
-                                            .replace(R.id.fragment_container, new Profile()).commit();
+                                    FirebaseFirestore.getInstance().collection("users").document(mAuth.getUid())
+                                            .set(user.getUser()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            progressBar.setVisibility(View.GONE);
+                                            Toast.makeText(getContext(), "User created succesfully",
+                                                    Toast.LENGTH_SHORT).show();
+
+                                            getActivity().getSupportFragmentManager().beginTransaction()
+                                                    .replace(R.id.fragment_container, new Profile()).commit();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            progressBar.setVisibility(View.GONE);
+                                            Toast.makeText(getContext(), "User data not stored!",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     progressBar.setVisibility(View.GONE);
-                                    Toast.makeText(getView().getContext(), "User data not stored!",
-                                            Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Display name update failed", Toast.LENGTH_SHORT).show();
+                                    Log.d(TAG, "onFailure: " + e);
+                                    e.printStackTrace();
                                 }
                             });
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());

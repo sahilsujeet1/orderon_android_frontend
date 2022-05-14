@@ -1,13 +1,9 @@
-package models;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+package com.projects.orderon.models;
 
 import com.google.firebase.Timestamp;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class User {
 

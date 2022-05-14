@@ -7,14 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import models.Address;
+import com.projects.orderon.models.Address;
 
 public class SavedAddressRecyclerAdapter extends RecyclerView.Adapter<SavedAddressRecyclerAdapter.ViewHolder> {
 
@@ -41,8 +40,9 @@ public class SavedAddressRecyclerAdapter extends RecyclerView.Adapter<SavedAddre
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.d(TAG, "SavedAddressList onBindViewHolder holder");
         Address address = addresses.get(position);
-        holder.address.setText(address.getStreet() + ", " + address.getPO() + ", " + address.getCity() + ","
+        holder.address.setText(address.getStreet() + ", " + address.getCity() + ","
         + address.getState() + " - " + address.getPincode());
+        holder.mobile.setText("Mob: " + address.getMobile());
     }
 
     @Override
@@ -52,12 +52,13 @@ public class SavedAddressRecyclerAdapter extends RecyclerView.Adapter<SavedAddre
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageButton deleteBtn;
-        TextView address;
+        TextView address, mobile;
 
         public ViewHolder(@NonNull View itemView, RecyclerViewInterface rVI) {
             super(itemView);
             deleteBtn = itemView.findViewById(R.id.deleteSavedAddBtn);
             address = itemView.findViewById(R.id.fullAddress);
+            mobile = itemView.findViewById(R.id.mobNum);
 
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

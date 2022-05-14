@@ -8,14 +8,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 
-import models.Store;
+import com.projects.orderon.models.Store;
 
 public class StoresListRecyclerViewAdapter extends RecyclerView.Adapter<StoresListRecyclerViewAdapter.ViewHolder> {
 

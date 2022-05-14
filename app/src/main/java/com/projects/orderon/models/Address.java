@@ -1,13 +1,39 @@
-package models;
+package com.projects.orderon.models;
+
+import com.google.gson.annotations.SerializedName;
 
 public class Address {
-    String street, city, state, PO, pincode;
+    String street;
+    String city;
+    String state;
+    String pincode;
+    String fullName;
 
-    public Address(String street, String city, String state, String PO, String pincode) {
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    String mobile;
+
+
+    public Address(String fullName, String street, String city, String state, String pincode, String mobile) {
+        this.fullName = fullName;
         this.street = street;
         this.city = city;
         this.state = state;
-        this.PO = PO;
+        this.mobile = mobile;
         this.pincode = pincode;
     }
 
@@ -33,14 +59,6 @@ public class Address {
 
     public void setState(String state) {
         this.state = state;
-    }
-
-    public String getPO() {
-        return PO;
-    }
-
-    public void setPO(String PO) {
-        this.PO = PO;
     }
 
     public String getPincode() {

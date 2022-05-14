@@ -13,8 +13,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-import models.MenuItem;
-import models.Store;
+import com.projects.orderon.models.MenuItem;
 
 /**
  * A simple {@link Fragment} subclass.

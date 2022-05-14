@@ -2,22 +2,31 @@ package com.projects.orderon;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.Map;
 
-import models.Address;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.projects.orderon.models.Address;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +37,7 @@ public class Profile extends Fragment implements RecyclerViewInterface {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String TAG = "Profile";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -36,9 +46,14 @@ public class Profile extends Fragment implements RecyclerViewInterface {
     private String mParam2;
 
     private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private FirebaseFirestore db;
 
     private View view;
     private SavedAddressRecyclerAdapter addressAdapter;
+
+    private ShapeableImageView userDP;
+    private TextView userName, userEmail, logout;
 
     public Profile() {
         // Required empty public constructor
@@ -66,8 +81,6 @@ public class Profile extends Fragment implements RecyclerViewInterface {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAuth = FirebaseAuth.getInstance();
-
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -80,48 +93,89 @@ public class Profile extends Fragment implements RecyclerViewInterface {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        TextView logout = view.findViewById(R.id.logoutBtn);
+        logout = view.findViewById(R.id.logoutBtn);
+        userDP = view.findViewById(R.id.profileImage);
+        userEmail = view.findViewById(R.id.profileEmail);
+        userName = view.findViewById(R.id.profileName);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAuth.signOut();
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new Login()).addToBackStack("profile").commit();
+                        .replace(R.id.fragment_container, new Login()).commit();
             }
         });
 
-        getSavedAddresses();
+//        getProfile();
+//        getSavedAddresses();
         return view;
+    }
+
+    public void getProfile() {
+        if(currentUser != null) {
+            if(currentUser.getPhotoUrl() != null)
+                userDP.setImageURI(currentUser.getPhotoUrl());
+            userName.setText(currentUser.getDisplayName());
+            userEmail.setText(currentUser.getEmail());
+        }
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
+            Log.d(TAG, "onStart: " + currentUser.getDisplayName());
+            getProfile();
+            getSavedAddresses();
+
             currentUser.reload();
+
         } else {
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new Login()).addToBackStack("profile").commit();
-
         }
     }
 
     void getSavedAddresses() {
         RecyclerView savedAddRecyclerView = view.findViewById(R.id.savedAddRecyclerView);
-
-        ArrayList<Address> addresses = new ArrayList<>();
-        addresses.add(new Address("Manpur Patwatoli", "Gaya", "Bihar", "Buniyadganj", "823003"));
-        addresses.add(new Address("Chandigarh University", "Mohali", "Punjab", "SAS Nagar", "140413"));
-        addresses.add(new Address("Manpur Patwatoli2", "Gaya2", "Biha2r", "Buniyadganj2", "823003"));
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
         savedAddRecyclerView.setLayoutManager(layoutManager);
         savedAddRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        addressAdapter = new SavedAddressRecyclerAdapter(view.getContext(), addresses, this);
-        savedAddRecyclerView.setAdapter(addressAdapter);
+        ArrayList<Address> addresses = new ArrayList<>();
+
+        FirebaseFirestore.getInstance().collection("users").document(currentUser.getUid())
+                .collection("addresses").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Map<String, Object> address = document.getData();
+                        addresses.add(new Address(address.get("fullName").toString(), address.get("street").toString(), address.get("city").toString(),
+                                address.get("state").toString(), address.get("pin").toString(), address.get("mobile").toString()));
+                    }
+
+                    addressAdapter = new SavedAddressRecyclerAdapter(view.getContext(), addresses, null);
+
+                    savedAddRecyclerView.setAdapter(addressAdapter);
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
+//        addresses.add(new Address("Manpur Patwatoli", "Gaya", "Bihar", "823003"));
+//        addresses.add(new Address("Chandigarh University", "Mohali", "Punjab",  "140413"));
+//        addresses.add(new Address("Manpur Patwatoli2", "Gaya2", "Biha2r", "823003"));
+
+
+
+
     }
 
     @Override

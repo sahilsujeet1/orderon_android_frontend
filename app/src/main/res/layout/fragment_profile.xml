@@ -60,18 +60,18 @@
             android:padding="10dp">
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/shapeableImageView"
+                android:id="@+id/profileImage"
                 android:layout_width="65dp"
                 android:layout_height="65dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
+                android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
-                android:scaleType="centerCrop"
                 app:shapeAppearanceOverlay="@style/circluarImage"
-                app:srcCompat="@drawable/sahil_dp" />
+                app:srcCompat="@drawable/ic_baseline_account_circle_24" />
 
             <TextView
                 android:id="@+id/profileName"
@@ -81,7 +81,7 @@
                 android:layout_marginLeft="40dp"
                 android:text="Sahil Kumar"
                 android:textColor="#474343"
-                app:layout_constraintStart_toEndOf="@+id/shapeableImageView"
+                app:layout_constraintStart_toEndOf="@+id/profileImage"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -93,7 +93,7 @@
                 android:layout_marginTop="4dp"
                 android:textColor="#474343"
                 android:text="19bcs2029@gmail.com"
-                app:layout_constraintStart_toEndOf="@+id/shapeableImageView"
+                app:layout_constraintStart_toEndOf="@+id/profileImage"
                 app:layout_constraintTop_toBottomOf="@+id/profileName" />
 
             <TextView
@@ -105,7 +105,7 @@
                 android:text="Logout"
                 android:textColor="#D85029"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/shapeableImageView"
+                app:layout_constraintStart_toEndOf="@+id/profileImage"
                 app:layout_constraintTop_toBottomOf="@+id/profileEmail"
                 app:layout_constraintVertical_bias="1.0" />
 

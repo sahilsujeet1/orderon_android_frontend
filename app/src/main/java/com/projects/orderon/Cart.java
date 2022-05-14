@@ -12,9 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import models.CartItem;
+import com.projects.orderon.models.CartItem;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -1,4 +1,4 @@
-package models;
+package com.projects.orderon.models;
 
 public class Store {
     int imageURL;
