@@ -33,13 +33,15 @@ import com.projects.orderon.models.Address;
  * Use the {@link Profile#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Profile extends Fragment implements RecyclerViewInterface {
+public class Profile extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String TAG = "Profile";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private RecyclerViewInterface recyclerViewInterface;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -160,7 +162,7 @@ public class Profile extends Fragment implements RecyclerViewInterface {
                                 address.get("state").toString(), address.get("pin").toString(), address.get("mobile").toString()));
                     }
 
-                    addressAdapter = new SavedAddressRecyclerAdapter(view.getContext(), addresses, null);
+                    addressAdapter = new SavedAddressRecyclerAdapter(view.getContext(), addresses, recyclerViewInterface);
 
                     savedAddRecyclerView.setAdapter(addressAdapter);
                 } else {
@@ -178,8 +180,4 @@ public class Profile extends Fragment implements RecyclerViewInterface {
 
     }
 
-    @Override
-    public void onItemClick(int position) {
-
-    }
 }

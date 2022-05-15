@@ -1,6 +1,9 @@
 package com.projects.orderon;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +13,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 import com.projects.orderon.models.Store;
@@ -41,7 +51,8 @@ public class StoresListRecyclerViewAdapter extends RecyclerView.Adapter<StoresLi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.d(TAG, "StoreList onBindViewHolder holder");
         Store store = stores.get(position);
-        holder.image.setImageResource(store.getImageURL());
+        Glide.with(context).load(store.getImageURL()).into(holder.image);
+        //        holder.image.setImageBitmap(getImageBitmap(store.getImageURL()));
         holder.storeName.setText(store.getStoreName());
         holder.storeAddress.setText(store.getStoreAddress());
     }
@@ -49,6 +60,23 @@ public class StoresListRecyclerViewAdapter extends RecyclerView.Adapter<StoresLi
     @Override
     public int getItemCount() {
         return stores.size();
+    }
+
+    private Bitmap getImageBitmap(String url) {
+        Bitmap bm = null;
+        try {
+            URL aURL = new URL(url);
+            URLConnection conn = aURL.openConnection();
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            BufferedInputStream bis = new BufferedInputStream(is);
+            bm = BitmapFactory.decodeStream(bis);
+            bis.close();
+            is.close();
+        } catch (IOException e) {
+            Log.e(TAG, "Error getting bitmap", e);
+        }
+        return bm;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

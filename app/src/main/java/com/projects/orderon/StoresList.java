@@ -1,8 +1,14 @@
 package com.projects.orderon;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -14,9 +20,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+import com.firebase.geofire.GeoFireUtils;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQueryBounds;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.projects.orderon.models.Store;
 
 /**
@@ -28,12 +50,21 @@ public class StoresList extends Fragment implements RecyclerViewInterface {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String TAG = "StoresList";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private FirebaseFirestore db;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private int PERMISSION_ID = 44;
+    private double currLat, currLong;
+
+    boolean shouldRefreshOnResume;
+
 
     View view;
 
@@ -81,37 +112,122 @@ public class StoresList extends Fragment implements RecyclerViewInterface {
         view = inflater.inflate(R.layout.fragment_stores_list, container, false);
         storeTypeTitle = view.findViewById(R.id.storeTypeTitle);
 
+        db = FirebaseFirestore.getInstance();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
+
         getParentFragmentManager().setFragmentResultListener("type", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
                 storeType = bundle.getString("type");
-                storeType = storeType.substring(0,1).toUpperCase() + storeType.substring(1).toLowerCase();
-                storeTypeTitle.setText(storeType);
+                storeTypeTitle.setText(storeType.substring(0,1).toUpperCase() + storeType.substring(1).toLowerCase());
+
+                getLocationThenStores();
             }
         });
 
-        getStores();
         return view;
 
     }
 
-    void getStores() {
-        RecyclerView recyclerView = view.findViewById(R.id.storeListRecyclerView);
-
-        stores = new ArrayList<Store>();
-        stores.add(new Store("Paprika", "Tower Chowk, Gaya", "restaurant", R.drawable.curry));
-        stores.add(new Store("Spice Affair", "Manpur Bridge, Gaya", "restaurant", R.drawable.biryani));
-        stores.add(new Store("Taj Darbar", "Bodhgaya, Gaya", "restaurant", R.drawable.north_indian));
-        stores.add(new Store("Grill Inn", "A.P. Colony, Gaya", "restaurant", R.drawable.salad));
-        stores.add(new Store("Yo! China", "S.P Colony, Gaya", "restaurant", R.drawable.south_indian));
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        storeAdapter = new StoresListRecyclerViewAdapter(view.getContext(), stores, this);
-        recyclerView.setAdapter(storeAdapter);
+    boolean checkPermission() {
+        if(ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+            return false;
+        }
     }
+
+
+    void getLocationThenStores() {
+
+        if(checkPermission()) {
+            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    Location location = task.getResult();
+                    if(location != null) {
+                        currLat = location.getLatitude();
+                        currLong = location.getLongitude();
+
+                        RecyclerView recyclerView = view.findViewById(R.id.storeListRecyclerView);
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
+                        recyclerView.setLayoutManager(layoutManager);
+                        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+                        stores = new ArrayList<Store>();
+
+                        final GeoLocation center = new GeoLocation(currLat, currLong);
+                        final double radiusInM = 10 * 1000;
+
+                        List<GeoQueryBounds> bounds = GeoFireUtils.getGeoHashQueryBounds(center, radiusInM);
+                        final List<Task<QuerySnapshot>> tasks = new ArrayList<>();
+                        for (GeoQueryBounds b : bounds) {
+                            Query q = db.collection(storeType)
+                                    .orderBy("geohash")
+                                    .startAt(b.startHash)
+                                    .endAt(b.endHash);
+
+                            tasks.add(q.get());
+                        }
+
+                        Tasks.whenAllComplete(tasks)
+                                .addOnCompleteListener(new OnCompleteListener<List<Task<?>>>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<List<Task<?>>> t) {
+                                        List<DocumentSnapshot> matchingDocs = new ArrayList<>();
+
+                                        for (Task<QuerySnapshot> task : tasks) {
+                                            QuerySnapshot snap = task.getResult();
+                                            for (DocumentSnapshot doc : snap.getDocuments()) {
+                                                Map<String, Object> result = doc.getData();
+
+                                                GeoPoint location= (GeoPoint) result.get("location");
+                                                double lat = location.getLatitude();
+                                                double lng = location.getLongitude();
+
+                                                // We have to filter out a few false positives due to GeoHash
+                                                // accuracy, but most will match
+                                                GeoLocation docLocation = new GeoLocation(lat, lng);
+                                                double distanceInM = GeoFireUtils.getDistanceBetween(docLocation, center);
+                                                if (distanceInM <= radiusInM) {
+                                                    matchingDocs.add(doc);
+                                                }
+                                            }
+                                        }
+
+                                        for(DocumentSnapshot doc:matchingDocs) {
+                                            Map<String, Object> store = doc.getData();
+                                            stores.add(new Store(
+                                                    store.get("name").toString(),
+                                                    store.get("street").toString(),
+                                                    store.get("category").toString(),
+                                                    store.get("imgURL").toString()
+                                            ));
+
+                                            Log.d(TAG, "onComplete: " + store.get("name").toString());
+                                        }
+//
+
+                                        storeAdapter = new StoresListRecyclerViewAdapter(view.getContext(), stores, StoresList.this);
+                                        recyclerView.setAdapter(storeAdapter);
+                                    }
+                                });
+
+
+                    } else {
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, new HomeFragment()).commit();
+                        Toast.makeText(getContext(), "Current location fetching failed. Please retry.", Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+            });
+        }
+    }
+
 
     @Override
     public void onItemClick(int position) {
@@ -122,6 +238,23 @@ public class StoresList extends Fragment implements RecyclerViewInterface {
 
         Log.d("StoresList", "onItemClick: " + (position+1));
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        shouldRefreshOnResume = true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(shouldRefreshOnResume) {
+            getLocationThenStores();
+        }
+    }
 }
+
+
 
 

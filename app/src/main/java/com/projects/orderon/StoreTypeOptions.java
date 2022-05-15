@@ -75,7 +75,7 @@ public class StoreTypeOptions extends DialogFragment {
         groceries = view.findViewById(R.id.groceriesType);
         pharmacy = view.findViewById(R.id.pharmacyType);
 
-        openStoreActivity(restaurant, "restaurant");
+        openStoreActivity(restaurant, "restaurants");
         openStoreActivity(groceries, "groceries");
         openStoreActivity(pharmacy, "pharmacy");
 

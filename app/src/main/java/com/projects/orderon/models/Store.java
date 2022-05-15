@@ -1,7 +1,7 @@
 package com.projects.orderon.models;
 
 public class Store {
-    int imageURL;
+    String imageURL;
     String storeName;
     String storeAddress;
     String storeType;
@@ -10,10 +10,10 @@ public class Store {
         storeAddress = "XYZ";
         storeName = "ABC";
         storeType = "restaurant";
-        imageURL = 0;
+        imageURL = "";
     }
 
-    public Store(String name, String address, String type, int url) {
+    public Store(String name, String address, String type, String url) {
         storeAddress = address;
         storeName = name;
         storeType = type;
@@ -44,11 +44,11 @@ public class Store {
         this.storeType = storeType;
     }
 
-    public int getImageURL() {
+    public String getImageURL() {
         return imageURL;
     }
 
-    public void setImageURL(int imageURL) {
+    public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
     }
 
