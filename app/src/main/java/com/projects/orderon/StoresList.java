@@ -201,6 +201,7 @@ public class StoresList extends Fragment implements RecyclerViewInterface {
                                         for(DocumentSnapshot doc:matchingDocs) {
                                             Map<String, Object> store = doc.getData();
                                             stores.add(new Store(
+                                                    doc.getId(),
                                                     store.get("name").toString(),
                                                     store.get("street").toString(),
                                                     store.get("category").toString(),
@@ -230,16 +231,6 @@ public class StoresList extends Fragment implements RecyclerViewInterface {
 
 
     @Override
-    public void onItemClick(int position) {
-
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new StoreMenu())
-                .addToBackStack(null).commit();
-
-        Log.d("StoresList", "onItemClick: " + (position+1));
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
         shouldRefreshOnResume = true;
@@ -253,6 +244,25 @@ public class StoresList extends Fragment implements RecyclerViewInterface {
             getLocationThenStores();
         }
     }
+
+    @Override
+    public void onStoreClick(int position, Store store) {
+        Bundle bundle = new Bundle();
+        bundle.putString("storeType", store.getStoreType());
+        bundle.putString("storeId", store.getStoreId());
+        bundle.putString("name", store.getStoreName());
+        bundle.putString("address", store.getStoreAddress());
+        getParentFragmentManager().setFragmentResult("storeData", bundle);
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new StoreMenu())
+                .addToBackStack(null).commit();
+
+        Log.d("StoresList", "onItemClick: " + (position+1));
+    }
+
+    @Override
+    public void onItemClick(int position) {}
 }
 
 

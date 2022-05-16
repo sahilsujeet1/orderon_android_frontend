@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -117,7 +118,7 @@ public class Profile extends Fragment {
     public void getProfile() {
         if(currentUser != null) {
             if(currentUser.getPhotoUrl() != null)
-                userDP.setImageURI(currentUser.getPhotoUrl());
+                Glide.with(getContext()).load(currentUser.getPhotoUrl()).into(userDP);
             userName.setText(currentUser.getDisplayName());
             userEmail.setText(currentUser.getEmail());
         }

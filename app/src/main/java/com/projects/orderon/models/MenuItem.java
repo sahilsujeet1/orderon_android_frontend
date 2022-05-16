@@ -1,16 +1,25 @@
 package com.projects.orderon.models;
 
 public class MenuItem {
-    String itemName, description;
-    int price, qty, imageURL;
+    String itemName;
+    String description, storeId;
+    String itemId, imageURL;
+    int price, qty;
 
-    public MenuItem(String name, String desc, int p, int url) {
+    public MenuItem(String id, String name, String desc, int p, String url) {
+        itemId = id;
         itemName = name;
         description = desc;
         price = p;
         imageURL = url;
         qty = 0;
     }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public String getStoreId() { return storeId; }
 
     public String getItemName() {
         return itemName;
@@ -44,11 +53,11 @@ public class MenuItem {
         this.qty = qty;
     }
 
-    public int getImageURL() {
+    public String getImageURL() {
         return imageURL;
     }
 
-    public void setImageURL(int imageURL) {
+    public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
     }
 }

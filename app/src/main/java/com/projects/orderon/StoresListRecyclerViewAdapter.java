@@ -97,7 +97,7 @@ public class StoresListRecyclerViewAdapter extends RecyclerView.Adapter<StoresLi
                         int pos = getAdapterPosition();
 
                         if(pos != RecyclerView.NO_POSITION) {
-                            rVI.onItemClick(pos);
+                            rVI.onStoreClick(pos, stores.get(pos));
                         }
                     }
                 }

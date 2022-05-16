@@ -93,7 +93,7 @@ public class StoreTypeOptions extends DialogFragment {
                 getParentFragmentManager().setFragmentResult("type", bundle);
 
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new StoresList()).addToBackStack("storeTypeMenu").commit();
+                        .replace(R.id.fragment_container, new StoresList()).commit();
                 dismiss();
 
             }

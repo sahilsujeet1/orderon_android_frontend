@@ -1,6 +1,7 @@
 package com.projects.orderon;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import com.bumptech.glide.Glide;
 import com.projects.orderon.models.MenuItem;
 
 public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerViewAdapter.ViewHolder> {
@@ -41,7 +43,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.d(TAG, "MenuItemsList onBindViewHolder holder");
         MenuItem item = items.get(position);
-        holder.itemImage.setImageResource(item.getImageURL());
+        Glide.with(context).load(Uri.parse(item.getImageURL())).into(holder.itemImage);
         holder.itemName.setText(item.getItemName());
         holder.itemDesc.setText(item.getDescription());
         holder.price.setText("Rs. " + Integer.toString(item.getPrice()));

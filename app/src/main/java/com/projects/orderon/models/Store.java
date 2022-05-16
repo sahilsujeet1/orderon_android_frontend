@@ -5,6 +5,7 @@ public class Store {
     String storeName;
     String storeAddress;
     String storeType;
+    String storeId;
 
     public Store() {
         storeAddress = "XYZ";
@@ -13,12 +14,17 @@ public class Store {
         imageURL = "";
     }
 
-    public Store(String name, String address, String type, String url) {
+
+
+    public Store(String id, String name, String address, String type, String url) {
+        storeId = id;
         storeAddress = address;
         storeName = name;
         storeType = type;
         imageURL = url;
     }
+
+    public String getStoreId() { return storeId; }
 
     public String getStoreName() {
         return storeName;
