@@ -2,17 +2,33 @@ package com.projects.orderon;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.projects.orderon.models.Address;
 import com.projects.orderon.models.Order;
 import com.projects.orderon.models.OrderItem;
 
@@ -22,6 +38,8 @@ import com.projects.orderon.models.OrderItem;
  * create an instance of this fragment.
  */
 public class OrderHistory extends Fragment {
+
+    private static final String TAG = "OrderHistory";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,6 +54,9 @@ public class OrderHistory extends Fragment {
 
     ArrayList<Order> orders;
     OrderHistoryRecyclerAdapter orderHistoryAdapter;
+
+    FirebaseFirestore db;
+    FirebaseUser user;
 
     public OrderHistory() {
         // Required empty public constructor
@@ -62,10 +83,8 @@ public class OrderHistory extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        db = FirebaseFirestore.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
@@ -73,7 +92,6 @@ public class OrderHistory extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_order_history, container, false);
-
         getOrderHistory();
 
         return view;
@@ -82,27 +100,90 @@ public class OrderHistory extends Fragment {
 
     void getOrderHistory() {
         RecyclerView recyclerView = view.findViewById(R.id.orderHistoryRecyclerView);
-
-        orders = new ArrayList<Order>();
-        ArrayList<OrderItem> items1 = new ArrayList<OrderItem>();
-        OrderItem i1 = new OrderItem("Amul Butter", "Grocery Store1", 1, 70, R.drawable.butter);
-        OrderItem i2 = new OrderItem("Paneer Butter Masala", "Paprika", 1, 230, R.drawable.north_indian);
-
-        items1.add(i1);
-        items1.add(i2);
-
-        ArrayList<OrderItem> items2 = new ArrayList<OrderItem>();
-        items2.add(i1);
-        items2.add(i2);
-
-        orders.add(new Order("OD12345", "04-05-2022", "COD", "Gaya, Bihar", items1));
-        orders.add(new Order("OD12345", "05-05-2022", "COD", "Gaya, Bihar", items2));
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        orderHistoryAdapter = new OrderHistoryRecyclerAdapter(view.getContext(), orders);
-        recyclerView.setAdapter(orderHistoryAdapter);
+
+        orders = new ArrayList<Order>();
+        db.collection("users").document(user.getUid()).collection("orders")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    List<DocumentSnapshot> docs = task.getResult().getDocuments();
+                    ArrayList<Order> ordersToShow = new ArrayList<>();
+                    for(DocumentSnapshot doc:docs) {
+                        try {
+                            Map<String, Object> data = doc.getData();
+                            Timestamp orderedAt = (Timestamp) data.get("orderedAt");
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+                            String date = sdf.format(orderedAt.toDate());
+
+                            Map<String, Object> address = (Map<String, Object>) data.get("shippingAddress");
+                            Address add = new Address(address.get("fullName").toString(),
+                                    address.get("street").toString(),
+                                    address.get("city").toString(),
+                                    address.get("state").toString(),
+                                    address.get("pin").toString(),
+                                    address.get("mobile").toString()
+                            );
+
+                            ArrayList<OrderItem> items = new ArrayList<>();
+
+                            List<Map<String, Object>> orders = (List<Map<String, Object>>) data.get("orders");
+                            for(Map<String, Object> order: orders) {
+                                List<Map<String, Object>> orderItems = (List<Map<String, Object>>) order.get("orderItems");
+
+                                for(Map<String, Object> i:orderItems) {
+                                    OrderItem item = new OrderItem(
+                                            i.get("item").toString(),
+                                            i.get("storeName").toString(),
+                                            Integer.parseInt(i.get("quantity").toString()),
+                                            Integer.parseInt(i.get("netPrice").toString()),
+                                            i.get("imgURL").toString()
+                                    );
+                                    items.add(item);
+                                }
+                            }
+
+                            Order order = new Order(
+                                    doc.getId(),
+                                    date,
+                                    data.get("mode").toString(),
+                                    add, items );
+
+                            ordersToShow.add(order);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    orderHistoryAdapter = new OrderHistoryRecyclerAdapter(view.getContext(), ordersToShow);
+                    recyclerView.setAdapter(orderHistoryAdapter);
+                }
+            }
+        });
+
+
+//        ArrayList<OrderItem> items1 = new ArrayList<OrderItem>();
+//        OrderItem i1 = new OrderItem("Amul Butter", "Grocery Store1", 1, 70, R.drawable.butter);
+//        OrderItem i2 = new OrderItem("Paneer Butter Masala", "Paprika", 1, 230, R.drawable.north_indian);
+//
+//        items1.add(i1);
+//        items1.add(i2);
+//
+//        ArrayList<OrderItem> items2 = new ArrayList<OrderItem>();
+//        items2.add(i1);
+//        items2.add(i2);
+//
+//        orders.add(new Order("OD12345", "04-05-2022", "COD", "Gaya, Bihar", items1));
+//        orders.add(new Order("OD12345", "05-05-2022", "COD", "Gaya, Bihar", items2));
+
+
+
+
     }
 }

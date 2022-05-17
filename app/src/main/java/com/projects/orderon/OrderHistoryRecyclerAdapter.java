@@ -41,10 +41,10 @@ public class OrderHistoryRecyclerAdapter extends RecyclerView.Adapter<OrderHisto
         Log.d(TAG, "OrderHistory onBindViewHolder holder");
         Order order = orders.get(position);
         Log.d(TAG, order.getItems().toString());
-        holder.odId.setText("Order ID: " + order.getOrderId());
-        holder.date.setText("Order Date: " + order.getDate());
-        holder.address.setText("Shipping Add.: " + order.getAddress());
-        holder.mode.setText("Payment Mode: " + order.getPaymentMode());
+        holder.odId.setText("Od ID: " + order.getOrderId());
+        holder.date.setText("Od Dt: " + order.getDate());
+        holder.address.setText("Ship Add.: " + order.getAddressString());
+        holder.mode.setText("Mode: " + order.getPaymentMode().toUpperCase());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 holder.orderItemsRecyclerView.getContext(),
@@ -52,7 +52,7 @@ public class OrderHistoryRecyclerAdapter extends RecyclerView.Adapter<OrderHisto
 
         layoutManager.setInitialPrefetchItemCount(order.getItems().size());
 
-        OrderItemRecyclerAdapter orderItemRecyclerAdapter = new OrderItemRecyclerAdapter(order.getItems());
+        OrderItemRecyclerAdapter orderItemRecyclerAdapter = new OrderItemRecyclerAdapter(context, order.getItems());
         holder.orderItemsRecyclerView.setLayoutManager(layoutManager);
         holder.orderItemsRecyclerView.setAdapter(orderItemRecyclerAdapter);
         holder.orderItemsRecyclerView.setRecycledViewPool(viewPool);

@@ -12,6 +12,7 @@
         android:id="@+id/orderItemImage"
         android:layout_width="99dp"
         android:layout_height="82dp"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

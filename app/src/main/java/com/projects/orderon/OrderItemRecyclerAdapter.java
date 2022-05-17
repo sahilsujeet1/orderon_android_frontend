@@ -1,5 +1,7 @@
 package com.projects.orderon;
 
+import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import com.bumptech.glide.Glide;
 import com.projects.orderon.models.OrderItem;
 
 public class OrderItemRecyclerAdapter extends RecyclerView.Adapter<OrderItemRecyclerAdapter.ViewHolder> {
@@ -19,9 +22,11 @@ public class OrderItemRecyclerAdapter extends RecyclerView.Adapter<OrderItemRecy
     private static final String TAG = "orderItemAdapter";
 
     private ArrayList<OrderItem> items;
+    Context context;
 
-    public OrderItemRecyclerAdapter(ArrayList<OrderItem> itemsParameter) {
+    public OrderItemRecyclerAdapter(Context ctx, ArrayList<OrderItem> itemsParameter) {
         this.items = itemsParameter;
+        this.context = ctx;
     }
 
     @NonNull
@@ -33,14 +38,14 @@ public class OrderItemRecyclerAdapter extends RecyclerView.Adapter<OrderItemRecy
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Log.d(TAG, "SOrderHistoryItem onBindViewHolder holder");
+        Log.d(TAG, "OrderHistoryItem onBindViewHolder holder");
         OrderItem item = items.get(position);
         Log.d(TAG, item.getItemName());
         holder.itemName.setText(item.getItemName());
         holder.seller.setText(item.getSeller());
         holder.qty.setText("Qty: " + Integer.toString(item.getQty()));
-        holder.amount.setText("Price: " + Integer.toString(item.getAmount()));
-        holder.img.setImageResource(item.getImgURL());
+        holder.amount.setText("Price: Rs." + Integer.toString(item.getAmount()));
+        Glide.with(context).load(Uri.parse(item.getImgURL())).into(holder.img);
     }
 
     @Override

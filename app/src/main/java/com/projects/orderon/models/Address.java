@@ -27,6 +27,7 @@ public class Address {
 
     String mobile;
 
+    public Address() {}
 
     public Address(String fullName, String street, String city, String state, String pincode, String mobile) {
         this.fullName = fullName;

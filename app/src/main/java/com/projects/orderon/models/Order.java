@@ -7,9 +7,9 @@ public class Order {
     String date;
     String orderId;
     String paymentMode;
-    String address;
+    Address address;
 
-    public Order(String oId, String dt, String mode, String add, ArrayList<OrderItem> i) {
+    public Order(String oId, String dt, String mode, Address add, ArrayList<OrderItem> i) {
         orderId = oId;
         date = dt;
         paymentMode = mode;
@@ -49,11 +49,17 @@ public class Order {
         this.paymentMode = paymentMode;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public String getAddressString() {
+        String add = address.getFullName() + ", " + address.getStreet() + ", "
+                + address.getCity() + ", " + address.getState() + " - " + address.getPincode();
+        return add;
+    }
+
+    public void setAddress(Address address) {
         this.address = address;
     }
 

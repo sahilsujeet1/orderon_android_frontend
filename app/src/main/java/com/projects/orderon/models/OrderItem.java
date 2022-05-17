@@ -2,10 +2,10 @@ package com.projects.orderon.models;
 
 public class OrderItem {
 
-    String itemName, seller;
-    int qty, amount, imgURL;
+    String itemName, seller, imgURL;
+    int qty, amount;
 
-    public OrderItem(String name, String slr, int q, int amt, int url) {
+    public OrderItem(String name, String slr, int q, int amt, String url) {
         itemName = name;
         seller = slr;
         qty = q;
@@ -45,11 +45,11 @@ public class OrderItem {
         this.amount = amount;
     }
 
-    public int getImgURL() {
+    public String getImgURL() {
         return imgURL;
     }
 
-    public void setImgURL(int imgURL) {
+    public void setImgURL(String imgURL) {
         this.imgURL = imgURL;
     }
 }
