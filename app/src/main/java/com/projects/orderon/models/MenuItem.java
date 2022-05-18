@@ -7,13 +7,14 @@ public class MenuItem {
     String itemName;
     String description, storeId;
     String itemId, imageURL;
-    int price, qty;
+    int price, qty, netPrice;
 
-    public MenuItem(String id, String name, String desc, int p, int q, String url, String stId) {
+    public MenuItem(String id, String name, String desc, int p, int netP, int q, String url, String stId) {
         itemId = id;
         itemName = name;
         description = desc;
         price = p;
+        netPrice = netP;
         imageURL = url;
         qty = q;
         storeId = stId;
@@ -25,7 +26,9 @@ public class MenuItem {
         item.put("id", itemId);
         item.put("item", itemName);
         item.put("description", description);
-        item.put("netPrice", price);
+        item.put("price", price);
+        item.put("netPrice", netPrice);
+
         item.put("quantity", qty);
         item.put("storeId", storeId);
         item.put("imgURL", imageURL);
@@ -75,6 +78,10 @@ public class MenuItem {
     public String getImageURL() {
         return imageURL;
     }
+
+    public void setNetPrice(int np) { this.netPrice = np; }
+
+    public int getNetPrice() { return this.netPrice; }
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;

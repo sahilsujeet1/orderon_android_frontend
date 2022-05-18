@@ -119,7 +119,7 @@ public class Cart extends Fragment {
                 totalAmount = 0;
                 totalQty = 0;
                 for(MenuItem item: cartItems) {
-                    totalAmount += item.getPrice();
+                    totalAmount += (item.getPrice() * item.getQty());
                     totalQty += item.getQty();
                 }
 

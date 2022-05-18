@@ -46,6 +46,7 @@ public class CartViewModel extends ViewModel {
                                         data.get("id").toString(),
                                         data.get("item").toString(),
                                         data.get("description").toString(),
+                                        Integer.parseInt(data.get("price").toString()),
                                         Integer.parseInt(data.get("netPrice").toString()),
                                         Integer.parseInt(data.get("quantity").toString()),
                                         data.get("imgURL").toString(),
@@ -62,30 +63,21 @@ public class CartViewModel extends ViewModel {
 
     public void addItemToCart(MenuItem item) {
         ArrayList<MenuItem> cartItem = cart.getValue();
-        if(cartItem == null) cartItem = new ArrayList<>();
-        boolean found = false;
+        if(cartItem == null || cartItem.size() <= 0) cartItem = new ArrayList<>();
 
-        if(cartItem.size() > 0) {
-            for(MenuItem x:cartItem) {
-                if(x.getItemId() == item.getItemId()) {
-                    x.setQty(item.getQty());
-                    found = true;
-                }
-            }
-        }
-
-        if(found) {
-//            update value in DB
+        if(cartItem.contains(item)) {
+            int i = cartItem.indexOf(item);
+            MenuItem y = cartItem.get(i);
+            y.setQty(item.getQty());
+            y.setNetPrice(item.getQty() * item.getPrice());
+            cartItem.set(i,y);
             updateValue(item);
         } else {
             cartItem.add(item);
-            cart.setValue(cartItem);
-//            send to DB
             sendToDB(item);
         }
 
-        Log.d(TAG, "addItemToCart: " + cart.getValue().get(0).getMenuItem().toString());
-
+        cart.setValue(cartItem);
 
     }
 
@@ -93,22 +85,21 @@ public class CartViewModel extends ViewModel {
         ArrayList<MenuItem> cartItem = cart.getValue();
         if(cartItem == null) cartItem = new ArrayList<>();
 
-        for(MenuItem x:cartItem) {
-            if(x.getItemId() == item.getItemId()) {
-                x.setQty(item.getQty());
+        int i = cartItem.indexOf(item);
+        MenuItem y = cartItem.get(i);
 
-                if(x.getQty() == 0) {
-                    cartItem.remove(cartItem.indexOf(x));
-                    cart.setValue(cartItem);
+        if(y.getQty() == 0) {
+            cartItem.remove(i);
 //                    remove from DB
-                    removeItem(item);
-                } else {
-//                    update DB
-                    updateValue(item);
-                }
-
-            }
+            removeItem(item);
+        } else {
+            y.setQty(item.getQty());
+            y.setNetPrice(item.getQty() * item.getPrice());
+            cartItem.set(i, y);
+            updateValue(item);
         }
+        cart.setValue(cartItem);
+
     }
 
     private void sendToDB(MenuItem item) {
@@ -139,7 +130,14 @@ public class CartViewModel extends ViewModel {
                 });
     }
 
-    private void removeItem(MenuItem item) {
+    public void removeItem(MenuItem item) {
+
+        if(cart.getValue().contains(item)) {
+            ArrayList<MenuItem> cartItem = cart.getValue();
+            cartItem.remove(item);
+            cart.setValue(cartItem);
+        }
+
         firebaseCart.whereEqualTo("id",item.getItemId()).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -154,8 +152,6 @@ public class CartViewModel extends ViewModel {
                                     if(task.isComplete()) {
                                         ArrayList<MenuItem> cartItem = cart.getValue();
                                         if(cartItem == null) cartItem = new ArrayList<>();
-                                        cartItem.remove(cartItem.indexOf(item));
-                                        cart.setValue(cartItem);
                                     }
                                 }
                             });
@@ -163,6 +159,5 @@ public class CartViewModel extends ViewModel {
                     }
                 });
     }
-
 
 }

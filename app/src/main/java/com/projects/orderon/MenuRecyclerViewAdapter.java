@@ -94,6 +94,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
                         curr.setQty(qty-1);
                         item = curr;
                         notifyItemChanged(pos);
+                        cartViewModel.removeItemFromCart(item);
                         Log.d(TAG, "onClick: Changed Item: " + item.getMenuItem().toString());
                     } else {
                         Toast.makeText(context, "Can't remove any further", Toast.LENGTH_SHORT).show();
@@ -106,13 +107,14 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
                 public void onClick(View view) {
                     int pos = getAdapterPosition();
                     MenuItem curr = items.get(pos);
+                    int qty = curr.getQty();
+                    Log.d(TAG, "onClick: Position: " + pos);
 
-                    if(item == null) {
+                    if(qty == 0) {
                         curr.setQty(1);
                         item = curr;
                         notifyItemChanged(pos);
                     } else {
-                        int qty = curr.getQty();
                         if(qty > 0) {
                             curr.setQty(qty+1);
                             item = curr;
