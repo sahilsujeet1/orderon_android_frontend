@@ -42,7 +42,7 @@ public class SavedAddressRecyclerAdapter extends RecyclerView.Adapter<SavedAddre
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.d(TAG, "SavedAddressList onBindViewHolder holder");
         Address address = addresses.get(position);
-        holder.address.setText(address.getStreet() + ", " + address.getCity() + ","
+        holder.address.setText(address.getFullName() + ", " + address.getStreet() + ", " + address.getCity() + ","
         + address.getState() + " - " + address.getPin());
         holder.mobile.setText("Mob: " + address.getMobile());
     }

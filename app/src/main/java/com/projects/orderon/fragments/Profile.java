@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -54,10 +56,10 @@ public class Profile extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private FirebaseFirestore db;
-
+    private ProgressBar progressBar;
     private View view;
     private SavedAddressRecyclerAdapter addressAdapter;
-
+    private Button newAddress;
     private ShapeableImageView userDP;
     private TextView userName, userEmail, logout;
 
@@ -103,6 +105,8 @@ public class Profile extends Fragment {
         userDP = view.findViewById(R.id.profileImage);
         userEmail = view.findViewById(R.id.profileEmail);
         userName = view.findViewById(R.id.profileName);
+        newAddress = view.findViewById(R.id.profileNewAddressBtn);
+        progressBar = view.findViewById(R.id.profileProgressBar);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,8 +117,13 @@ public class Profile extends Fragment {
             }
         });
 
-//        getProfile();
-//        getSavedAddresses();
+        newAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new NewAddress()).addToBackStack("Profile").commit();
+            }
+        });
         return view;
     }
 
@@ -148,6 +157,7 @@ public class Profile extends Fragment {
     }
 
     void getSavedAddresses() {
+        progressBar.setVisibility(View.VISIBLE);
         RecyclerView savedAddRecyclerView = view.findViewById(R.id.savedAddRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
         savedAddRecyclerView.setLayoutManager(layoutManager);
@@ -172,6 +182,7 @@ public class Profile extends Fragment {
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
+                progressBar.setVisibility(View.GONE);
             }
         });
 

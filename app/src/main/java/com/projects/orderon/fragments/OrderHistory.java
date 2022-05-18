@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class OrderHistory extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private ProgressBar progressBar;
     View view;
 
     ArrayList<Order> orders;
@@ -93,6 +94,7 @@ public class OrderHistory extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_order_history, container, false);
+        progressBar = view.findViewById(R.id.ordersProgressBar);
         getOrderHistory();
 
         return view;
@@ -100,6 +102,7 @@ public class OrderHistory extends Fragment {
 
 
     void getOrderHistory() {
+        progressBar.setVisibility(View.VISIBLE);
         RecyclerView recyclerView = view.findViewById(R.id.orderHistoryRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -165,26 +168,10 @@ public class OrderHistory extends Fragment {
                     orderHistoryAdapter = new OrderHistoryRecyclerAdapter(view.getContext(), ordersToShow);
                     recyclerView.setAdapter(orderHistoryAdapter);
                 }
+
+                progressBar.setVisibility(View.GONE);
             }
         });
-
-
-//        ArrayList<OrderItem> items1 = new ArrayList<OrderItem>();
-//        OrderItem i1 = new OrderItem("Amul Butter", "Grocery Store1", 1, 70, R.drawable.butter);
-//        OrderItem i2 = new OrderItem("Paneer Butter Masala", "Paprika", 1, 230, R.drawable.north_indian);
-//
-//        items1.add(i1);
-//        items1.add(i2);
-//
-//        ArrayList<OrderItem> items2 = new ArrayList<OrderItem>();
-//        items2.add(i1);
-//        items2.add(i2);
-//
-//        orders.add(new Order("OD12345", "04-05-2022", "COD", "Gaya, Bihar", items1));
-//        orders.add(new Order("OD12345", "05-05-2022", "COD", "Gaya, Bihar", items2));
-
-
-
 
     }
 }

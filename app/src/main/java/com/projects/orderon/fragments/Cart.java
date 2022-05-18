@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class Cart extends Fragment {
     private View view;
     private FirebaseFirestore db;
     private FirebaseUser user;
-
+    private ProgressBar progressBar;
     private int totalQty, totalAmount;
     private TextView quantity, amount;
     private CartViewModel cartViewModel;
@@ -92,6 +93,7 @@ public class Cart extends Fragment {
         amount = view.findViewById(R.id.cartTotalAmountValue);
         quantity = view.findViewById(R.id.cartTotalQtyValue);
         checkout = view.findViewById(R.id.checkout);
+        progressBar = view.findViewById(R.id.cartProgressBar);
 
         checkout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +115,7 @@ public class Cart extends Fragment {
     }
 
     public void getCartItems() {
+        progressBar.setVisibility(View.VISIBLE);
         RecyclerView recyclerView = view.findViewById(R.id.cartRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -134,6 +137,7 @@ public class Cart extends Fragment {
 
                 amount.setText(Integer.toString(totalAmount));
                 quantity.setText(Integer.toString(totalQty));
+                progressBar.setVisibility(View.GONE);
             }
         });
 

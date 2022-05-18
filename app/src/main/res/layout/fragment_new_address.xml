@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.HomeFragment">
+
+    <ProgressBar
+        android:id="@+id/addressProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="#CD3333"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="2dp"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="236dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/logo_desc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/orderon_logo"
+        tools:ignore="ImageContrastCheck" />
+
+    <TextView
+        android:id="@+id/moto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ubuntu_medium"
+        android:text="New Address"
+        android:textColor="@color/colorPrimary"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/homeScrollLinearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <LinearLayout
+        android:id="@+id/addressScrollLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="595dp"
+        android:background="@drawable/top_round_corner_layout"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <ScrollView
+            android:id="@+id/address_screen_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="516dp"
+            android:layout_margin="15dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/addressInputLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/login_round_corners_bg"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.492"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/signupHeading">
+
+                <EditText
+                    android:id="@+id/addFullNameInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/input_text_bg"
+                    android:ems="10"
+                    android:fontFamily="@font/ubuntu_medium"
+                    android:hint="Full Name"
+                    android:padding="15dp"
+                    android:textColor="@color/textColor"
+                    android:textColorHint="@color/textColor" />
+
+                <EditText
+                    android:id="@+id/addMobileInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/input_text_bg"
+                    android:ems="10"
+                    android:fontFamily="@font/ubuntu_medium"
+                    android:hint="Mobile no."
+                    android:inputType="phone"
+                    android:padding="15dp"
+                    android:textColor="@color/textColor"
+                    android:textColorHint="@color/textColor" />
+
+                <EditText
+                    android:id="@+id/addStreetInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/input_text_bg"
+                    android:ems="10"
+                    android:fontFamily="@font/ubuntu_medium"
+                    android:hint="Street"
+                    android:padding="15dp"
+                    android:textColor="@color/textColor"
+                    android:textColorHint="@color/textColor" />
+
+                <EditText
+                    android:id="@+id/addCityInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/input_text_bg"
+                    android:ems="10"
+                    android:fontFamily="@font/ubuntu_medium"
+                    android:hint="City"
+                    android:padding="15dp"
+                    android:textColor="@color/textColor"
+                    android:textColorHint="@color/textColor" />
+
+                <EditText
+                    android:id="@+id/addStateInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/input_text_bg"
+                    android:ems="10"
+                    android:fontFamily="@font/ubuntu_medium"
+                    android:hint="State"
+                    android:padding="15dp"
+                    android:textColor="@color/textColor"
+                    android:textColorHint="@color/textColor" />
+
+                <EditText
+                    android:id="@+id/addPincodeInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/input_text_bg"
+                    android:ems="10"
+                    android:fontFamily="@font/ubuntu_medium"
+                    android:hint="Pincode"
+                    android:inputType="textPostalAddress"
+                    android:padding="15dp"
+                    android:textColor="@color/textColor"
+                    android:textColorHint="@color/textColor" />
+
+
+                <Button
+                    android:id="@+id/addSaveButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/input_text_bg"
+                    android:fontFamily="@font/ubuntu_medium"
+                    android:text="Save"
+                    android:textColor="@color/textColor" />
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--</FrameLayout>-->

@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,7 +66,7 @@ public class StoresList extends Fragment implements RecyclerViewInterface {
     private double currLat, currLong;
 
     boolean shouldRefreshOnResume;
-
+    ProgressBar progressBar;
 
     View view;
 
@@ -112,6 +113,7 @@ public class StoresList extends Fragment implements RecyclerViewInterface {
 
         view = inflater.inflate(R.layout.fragment_stores_list, container, false);
         storeTypeTitle = view.findViewById(R.id.storeTypeTitle);
+        progressBar = view.findViewById(R.id.storesProgressBar);
 
         db = FirebaseFirestore.getInstance();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
@@ -145,6 +147,7 @@ public class StoresList extends Fragment implements RecyclerViewInterface {
     void getLocationThenStores() {
 
         if(checkPermission()) {
+            progressBar.setVisibility(View.VISIBLE);
             fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
@@ -215,11 +218,13 @@ public class StoresList extends Fragment implements RecyclerViewInterface {
 
                                         storeAdapter = new StoresListRecyclerViewAdapter(view.getContext(), stores, StoresList.this);
                                         recyclerView.setAdapter(storeAdapter);
+                                        progressBar.setVisibility(View.GONE);
                                     }
                                 });
 
 
                     } else {
+                        progressBar.setVisibility(View.GONE);
                         getActivity().getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, new HomeFragment()).commit();
                         Toast.makeText(getContext(), "Current location fetching failed. Please retry.", Toast.LENGTH_SHORT).show();

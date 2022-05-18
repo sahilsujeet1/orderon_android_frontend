@@ -8,6 +8,19 @@
     android:layout_height="match_parent"
     tools:context=".fragments.HomeFragment">
 
+    <ProgressBar
+        android:id="@+id/addressPaymentProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="#CD3333"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="2dp"/>
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="236dp"
@@ -65,7 +78,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/checkout"
+            android:id="@+id/newAddressBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -79,13 +92,13 @@
         <ScrollView
             android:id="@+id/add_payment_scroll"
             android:layout_width="match_parent"
-            android:layout_height="480dp"
+            android:layout_height="450dp"
             android:paddingHorizontal="10dp"
             android:paddingVertical="5dp"
             android:scrollbars="none"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkout">
+            app:layout_constraintTop_toBottomOf="@+id/newAddressBtn">
 
             <LinearLayout
                 android:id="@+id/add_payment_LinearLayout"
@@ -105,7 +118,6 @@
                         android:layout_marginEnd="3dp" />
 
                 </RadioGroup>
-
 
 
                 <TextView
@@ -130,16 +142,16 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/order_item_bg"
                         android:text="Online"
-                        android:textColor="@color/textColor"/>
+                        android:textColor="@color/textColor" />
 
                     <RadioButton
                         android:id="@+id/cod"
-                        android:layout_marginTop="5dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
                         android:background="@drawable/order_item_bg"
                         android:text="Cash On Delivery"
-                        android:textColor="@color/textColor"/>
+                        android:textColor="@color/textColor" />
                 </RadioGroup>
 
                 <Button

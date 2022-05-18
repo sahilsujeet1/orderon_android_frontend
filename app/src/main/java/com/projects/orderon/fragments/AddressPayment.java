@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -27,6 +28,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -44,6 +47,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -67,7 +71,7 @@ public class AddressPayment extends Fragment implements RecyclerViewInterface {
     private RadioGroup paymentModeGroup, addressRadioGroup;
     private RadioButton radioButton;
     private Button newAdd, orderOn;
-
+    private ProgressBar progressBar;
     private View view;
     private FirebaseUser currentUser;
     private SelectAddressRecyclerViewAdapter addressAdapter;
@@ -116,6 +120,8 @@ public class AddressPayment extends Fragment implements RecyclerViewInterface {
         view = inflater.inflate(R.layout.fragment_address_payment, container, false);
 
         orderOn = view.findViewById(R.id.checkoutOrderOn);
+        newAdd = view.findViewById(R.id.newAddressBtn);
+        progressBar = view.findViewById(R.id.addressPaymentProgressBar);
 
         getParentFragmentManager().setFragmentResultListener("cartAmount", this, new FragmentResultListener() {
             @Override
@@ -150,22 +156,30 @@ public class AddressPayment extends Fragment implements RecyclerViewInterface {
             }
         });
 
+        newAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new NewAddress()).addToBackStack("AddressPayment").commit();
+            }
+        });
+
         return view;
     }
 
     public void getAddresses() {
+        progressBar.setVisibility(View.VISIBLE);
         RecyclerView savedAddRecyclerView = view.findViewById(R.id.selectAddRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
         savedAddRecyclerView.setLayoutManager(layoutManager);
         savedAddRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-         addresses = new ArrayList<>();
 
         FirebaseFirestore.getInstance().collection("users").document(currentUser.getUid())
                 .collection("addresses").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    addresses = new ArrayList<>();
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Map<String, Object> address = document.getData();
                         addresses.add(new Address(address.get("fullName").toString(), address.get("street").toString(), address.get("city").toString(),
@@ -178,6 +192,7 @@ public class AddressPayment extends Fragment implements RecyclerViewInterface {
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
+                progressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -193,18 +208,20 @@ public class AddressPayment extends Fragment implements RecyclerViewInterface {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        addresses = new ArrayList<>();
+        getAddresses();
+    }
+
     private void placeOrder() {
         Log.d(TAG, "placeOrder: INSIDE PLACE ORDER");
         ArrayList<MenuItem> cartItems = cartViewModel.cart.getValue();
-
-//        Map<String, Object> orderDetails = new HashMap<>();
-//        orderDetails.put("shippingAddress", selectedAddress);
-//        orderDetails.put("mode", paymentMode);
-//        orderDetails.put("uid", currentUser.getUid());
-//        orderDetails.put("amount", totalAmonut);
-
         custOrderID = generateID();
         sellerOrderID = custOrderID;
+
+        progressBar.setVisibility(View.VISIBLE);
 
         ArrayList<Map<String, Object>> orderDetailsCust = orderSeller(cartItems, paymentMode, selectedAddress,currentUser.getUid(), "");
         String finalCustOrderID = orderCustomer(orderDetailsCust, currentUser.getUid(), paymentMode, selectedAddress, "");
@@ -237,10 +254,6 @@ public class AddressPayment extends Fragment implements RecyclerViewInterface {
             randomstring += chars.substring(rnum, rnum + 1);
         }
         return randomstring;
-    }
-
-    private void codCheckout() {
-
     }
 
     private ArrayList<Map<String, Object>> orderSeller(ArrayList<MenuItem> cart, String mode, Address address, String uid, String txnDetails) {
@@ -285,11 +298,11 @@ public class AddressPayment extends Fragment implements RecyclerViewInterface {
             orderDetails.add(content);
 
             FirebaseFirestore.getInstance().collection(storeCart.get(0).getStoreType())
-                    .document(entry.getKey()).set(content).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    .document(entry.getKey()).collection("orders").add(content).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                 @Override
-                public void onComplete(@NonNull Task<Void> task) {
+                public void onComplete(@NonNull Task<DocumentReference> task) {
                     if(task.isSuccessful())
-                    Log.d(TAG, "onComplete: SELLER ORDER SAVED");
+                        Log.d(TAG, "onComplete: SELLER ORDER SAVED");
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -327,16 +340,37 @@ public class AddressPayment extends Fragment implements RecyclerViewInterface {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()) {
-//                            Toast.makeText(getContext(), "Order placed successfully!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Order placed successfully!", Toast.LENGTH_SHORT).show();
+                            emptyCart();
+                            getActivity().getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.fragment_container, new HomeFragment()).commit();
                             Log.d(TAG, "onComplete: CUSTOMER ORDER SAVED SUCCESS");
                         } else {
                             Log.d(TAG, "onComplete: ERROR OCCURRED DURING CUSTOMER");
                             Toast.makeText(getContext(), "An error occurred!", Toast.LENGTH_SHORT).show();
                         }
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
 
         return custOrderID;
+    }
+
+    private void emptyCart() {
+        FirebaseFirestore.getInstance().collection("users").document(currentUser.getUid())
+                .collection("cart").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    List<DocumentSnapshot> docs = task.getResult().getDocuments();
+                    for(DocumentSnapshot doc:docs) {
+                        doc.getReference().delete();
+                    }
+
+                    cartViewModel.cart.setValue(new ArrayList<>());
+                }
+            }
+        });
     }
 
 //    public void onlineCheckout() {

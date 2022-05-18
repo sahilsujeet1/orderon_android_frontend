@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +48,7 @@ public class StoreMenu extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private ProgressBar progressBar;
     private FirebaseFirestore db;
 
     View view;
@@ -94,6 +96,7 @@ public class StoreMenu extends Fragment {
 
         name = view.findViewById(R.id.storeNameTitle);
         address = view.findViewById(R.id.storeAddressTitle);
+        progressBar = view.findViewById(R.id.menuProgressBar);
 
         getParentFragmentManager().setFragmentResultListener("storeData", this, new FragmentResultListener() {
             @Override
@@ -118,6 +121,7 @@ public class StoreMenu extends Fragment {
     }
 
     void getItems() {
+        progressBar.setVisibility(View.VISIBLE);
         RecyclerView recyclerView = view.findViewById(R.id.menuRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -144,6 +148,7 @@ public class StoreMenu extends Fragment {
                         } else {
                             Toast.makeText(getContext(), "Failed to fetch menu!", Toast.LENGTH_SHORT).show();
                         }
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
     }
