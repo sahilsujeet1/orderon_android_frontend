@@ -9,14 +9,19 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 import com.bumptech.glide.Glide;
 import com.projects.orderon.models.MenuItem;
+import com.projects.orderon.viewModels.CartViewModel;
 
 public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerViewAdapter.ViewHolder> {
 
@@ -25,11 +30,16 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
     private ArrayList<MenuItem> items = new ArrayList<MenuItem>();
     private Context context;
 
+    private CartViewModel cartViewModel;
+
     ImageButton remove, add;
+    MenuItem item = null;
 
     public MenuRecyclerViewAdapter(Context ctx, ArrayList<MenuItem> itemsParameter) {
         this.items = itemsParameter;
         this.context = ctx;
+
+        cartViewModel = new ViewModelProvider((ViewModelStoreOwner) ctx).get(CartViewModel.class);
     }
 
     @NonNull
@@ -77,11 +87,16 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
                 @Override
                 public void onClick(View view) {
                     int pos = getAdapterPosition();
-                    int qty = items.get(pos).getQty();
+                    MenuItem curr = items.get(pos);
+                    int qty = curr.getQty();
+
                     if(qty > 0) {
-                        items.get(pos).setQty(--qty);
-                        Log.d("Removeitem", "onClick: " + pos + " " + qty);
+                        curr.setQty(qty-1);
+                        item = curr;
                         notifyItemChanged(pos);
+                        Log.d(TAG, "onClick: Changed Item: " + item.getMenuItem().toString());
+                    } else {
+                        Toast.makeText(context, "Can't remove any further", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -90,12 +105,25 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
                 @Override
                 public void onClick(View view) {
                     int pos = getAdapterPosition();
-                    int qty = items.get(pos).getQty();
-                    if(qty >= 0) {
-                        items.get(pos).setQty(++qty);
-                        Log.d("Additem", "onClick: " + pos + " " + qty);
+                    MenuItem curr = items.get(pos);
+
+                    if(item == null) {
+                        curr.setQty(1);
+                        item = curr;
                         notifyItemChanged(pos);
+                    } else {
+                        int qty = curr.getQty();
+                        if(qty > 0) {
+                            curr.setQty(qty+1);
+                            item = curr;
+                            notifyItemChanged(pos);
+                        } else {
+
+                        }
                     }
+                    cartViewModel.addItemToCart(item);
+                    Log.d(TAG, "onClick: Changed Item: " + item.getMenuItem().toString());
+
                 }
             });
         }

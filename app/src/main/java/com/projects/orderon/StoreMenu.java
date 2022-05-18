@@ -131,7 +131,9 @@ public class StoreMenu extends Fragment {
                             List<DocumentSnapshot> docs = task.getResult().getDocuments();
                             for(DocumentSnapshot doc:docs) {
                                 Map<String, Object> data = doc.getData();
-                                items.add(new MenuItem(doc.getId(), data.get("item").toString(), data.get("description").toString(), Integer.parseInt(data.get("price").toString()), data.get("imgURL").toString()));
+                                items.add(new MenuItem(doc.getId(), data.get("item").toString(),
+                                        data.get("description").toString(), Integer.parseInt(data.get("price").toString()), Integer.parseInt(data.get("quantity").toString()),
+                                        data.get("imgURL").toString(), data.get("storeId").toString()));
                             }
                             menuAdapter = new MenuRecyclerViewAdapter(view.getContext(), items);
                             recyclerView.setAdapter(menuAdapter);

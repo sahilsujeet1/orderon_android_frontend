@@ -1,6 +1,7 @@
 package com.projects.orderon;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,20 +11,23 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 import com.projects.orderon.models.CartItem;
+import com.projects.orderon.models.MenuItem;
 
 public class CartRecyclerViewAdapter extends RecyclerView.Adapter<CartRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = "cartRecyclerViewAdapter";
 
-    private ArrayList<CartItem> items = new ArrayList<>();
+    private ArrayList<MenuItem> items = new ArrayList<>();
     private Context context;
 
-    public CartRecyclerViewAdapter(Context context, ArrayList<CartItem> items) {
+    public CartRecyclerViewAdapter(Context context, ArrayList<MenuItem> items) {
         this.items = items;
         this.context = context;
     }
@@ -39,12 +43,12 @@ public class CartRecyclerViewAdapter extends RecyclerView.Adapter<CartRecyclerVi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder holder");
 
-        CartItem item = items.get(position);
-        holder.cartItemName.setText(item.getCartItemName().toString());
-        holder.cartItemDesc.setText(item.getCartItemDesc());
-        holder.cartItemPrice.setText("Rs. " + Integer.toString(item.getCartItemPrice()));
-        holder.cartItemQty.setText(Integer.toString(item.getCartItemQty()));
-        holder.cartItemImgUrl.setImageResource(item.getCartItemImgUrl());
+        MenuItem item = items.get(position);
+        holder.cartItemName.setText(item.getItemName().toString());
+        holder.cartItemDesc.setText(item.getDescription());
+        holder.cartItemPrice.setText("Rs. " + Integer.toString(item.getPrice()));
+        holder.cartItemQty.setText(Integer.toString(item.getQty()));
+        Glide.with(context).load(Uri.parse(item.getImageURL())).into(holder.cartItemImgUrl);
 
     }
 

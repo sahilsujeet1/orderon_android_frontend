@@ -1,16 +1,36 @@
 package com.projects.orderon.models;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CartItem {
 
-    String cartItemName, cartItemDesc;
-    int cartItemPrice, cartItemQty, cartItemImgUrl;
+    String cartItemName, cartItemDesc, cartItemId, cartItemImgUrl, storeId;
+    int cartItemPrice, cartItemQty;
 
-    public CartItem(String name, String desc, int price, int qty, int img) {
+    Map<String, Object> item;
+
+    public CartItem(String id, String name, String desc, int price, int qty, String img, String stId) {
+        cartItemId = id;
         cartItemName = name;
         cartItemDesc = desc;
         cartItemPrice = price;
         cartItemQty = qty;
         cartItemImgUrl = img;
+        storeId = stId;
+    }
+
+    public Map<String, Object> getCartItem() {
+        item = new HashMap<>();
+        item.put("item", cartItemName);
+        item.put("netPrice", cartItemPrice * cartItemQty);
+        item.put("quantity", cartItemQty);
+        item.put("description", cartItemDesc);
+        item.put("imgURL", cartItemImgUrl);
+        item.put("id", cartItemId);
+        item.put("storeId", storeId);
+
+        return item;
     }
 
     public String getCartItemName() {
@@ -45,11 +65,11 @@ public class CartItem {
         this.cartItemQty = cartItemQty;
     }
 
-    public int getCartItemImgUrl() {
+    public String getCartItemImgUrl() {
         return cartItemImgUrl;
     }
 
-    public void setCartItemImgUrl(int cartItemImgUrl) {
+    public void setCartItemImgUrl(String cartItemImgUrl) {
         this.cartItemImgUrl = cartItemImgUrl;
     }
 }
