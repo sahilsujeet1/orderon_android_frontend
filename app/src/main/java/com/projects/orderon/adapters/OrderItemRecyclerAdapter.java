@@ -1,4 +1,4 @@
-package com.projects.orderon;
+package com.projects.orderon.adapters;
 
 import android.content.Context;
 import android.net.Uri;
@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import com.bumptech.glide.Glide;
+import com.projects.orderon.R;
 import com.projects.orderon.models.OrderItem;
 
 public class OrderItemRecyclerAdapter extends RecyclerView.Adapter<OrderItemRecyclerAdapter.ViewHolder> {

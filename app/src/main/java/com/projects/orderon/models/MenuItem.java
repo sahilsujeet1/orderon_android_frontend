@@ -4,34 +4,45 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MenuItem {
-    String itemName;
+    String item, storeType, storeName;
     String description, storeId;
-    String itemId, imageURL;
-    int price, qty, netPrice;
+    String itemId, imgURL;
+    int price, quantity, netPrice;
 
-    public MenuItem(String id, String name, String desc, int p, int netP, int q, String url, String stId) {
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public MenuItem(String id, String name, String desc, int p, int netP, int q, String url, String stId, String stType, String stName) {
         itemId = id;
-        itemName = name;
+        item = name;
         description = desc;
         price = p;
         netPrice = netP;
-        imageURL = url;
-        qty = q;
+        imgURL = url;
+        quantity = q;
         storeId = stId;
+        storeType = stType;
+        storeName = stName;
     }
 
     public Map<String, Object> getMenuItem() {
         Map<String, Object> item = new HashMap<>();
 
         item.put("id", itemId);
-        item.put("item", itemName);
+        item.put("item", this.item);
         item.put("description", description);
         item.put("price", price);
         item.put("netPrice", netPrice);
-
-        item.put("quantity", qty);
+        item.put("storeType", storeType);
+        item.put("storeName", storeName);
+        item.put("quantity", quantity);
         item.put("storeId", storeId);
-        item.put("imgURL", imageURL);
+        item.put("imgURL", imgURL);
         item.put("rating", 4.5);
 
         return item;
@@ -43,12 +54,12 @@ public class MenuItem {
 
     public String getStoreId() { return storeId; }
 
-    public String getItemName() {
-        return itemName;
+    public String getItem() {
+        return item;
     }
 
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public void setItem(String item) {
+        this.item = item;
     }
 
     public String getDescription() {
@@ -67,23 +78,39 @@ public class MenuItem {
         this.price = price;
     }
 
-    public int getQty() {
-        return qty;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setQty(int qty) {
-        this.qty = qty;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImgURL() {
+        return imgURL;
     }
 
     public void setNetPrice(int np) { this.netPrice = np; }
 
     public int getNetPrice() { return this.netPrice; }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setImgURL(String imgURL) {
+        this.imgURL = imgURL;
+    }
+
+    public String getStoreType() {
+        return storeType;
+    }
+
+    public void setStoreType(String storeType) {
+        this.storeType = storeType;
+    }
+
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 }

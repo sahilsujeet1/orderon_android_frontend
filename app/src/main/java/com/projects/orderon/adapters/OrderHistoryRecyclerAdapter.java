@@ -1,4 +1,4 @@
-package com.projects.orderon;
+package com.projects.orderon.adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import com.projects.orderon.R;
 import com.projects.orderon.models.Order;
 
 public class OrderHistoryRecyclerAdapter extends RecyclerView.Adapter<OrderHistoryRecyclerAdapter.ViewHolder> {

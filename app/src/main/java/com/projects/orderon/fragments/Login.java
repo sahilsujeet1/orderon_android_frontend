@@ -1,4 +1,4 @@
-package com.projects.orderon;
+package com.projects.orderon.fragments;
 
 import android.content.Intent;
 import android.content.IntentSender;
@@ -43,6 +43,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import com.projects.orderon.R;
 import com.projects.orderon.models.User;
 
 /**

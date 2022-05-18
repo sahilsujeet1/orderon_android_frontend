@@ -1,4 +1,4 @@
-package com.projects.orderon;
+package com.projects.orderon.fragments;
 
 import android.os.Bundle;
 
@@ -25,6 +25,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.projects.orderon.adapters.MenuRecyclerViewAdapter;
+import com.projects.orderon.R;
 import com.projects.orderon.models.MenuItem;
 
 /**
@@ -134,7 +136,8 @@ public class StoreMenu extends Fragment {
                                 items.add(new MenuItem(doc.getId(), data.get("item").toString(),
                                         data.get("description").toString(), Integer.parseInt(data.get("price").toString()),
                                         Integer.parseInt(data.get("price").toString()), Integer.parseInt(data.get("quantity").toString()),
-                                        data.get("imgURL").toString(), data.get("storeId").toString()));
+                                        data.get("imgURL").toString(), data.get("storeId").toString(), data.get("storeType").toString(), storeName)
+                                );
                             }
                             menuAdapter = new MenuRecyclerViewAdapter(view.getContext(), items);
                             recyclerView.setAdapter(menuAdapter);

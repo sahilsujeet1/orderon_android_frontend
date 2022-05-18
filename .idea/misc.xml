@@ -12,6 +12,8 @@
         <entry key="app/src/main/res/drawable/login_round_corners_bg.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/order_bundle_bg.xml" value="0.23" />
         <entry key="app/src/main/res/drawable/order_item_bg.xml" value="0.23" />
+        <entry key="app/src/main/res/drawable/payment_button_bg.xml" value="0.23" />
+        <entry key="app/src/main/res/drawable/round_button.xml" value="0.2025" />
         <entry key="app/src/main/res/drawable/round_corner_layout.xml" value="0.1895" />
         <entry key="app/src/main/res/drawable/store_card_bg.xml" value="0.318" />
         <entry key="app/src/main/res/layout-w1240dp/activity_login.xml" value="0.265234375" />
@@ -20,7 +22,9 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_stores_list.xml" value="0.1" />
         <entry key="app/src/main/res/layout/address_card.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/address_card_radio.xml" value="0.5" />
         <entry key="app/src/main/res/layout/cart_item.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/fragment_address_payment.xml" value="0.46987951807228917" />
         <entry key="app/src/main/res/layout/fragment_cart.xml" value="0.3762057877813505" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.33" />

@@ -1,4 +1,4 @@
-package com.projects.orderon;
+package com.projects.orderon.adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import com.projects.orderon.R;
+import com.projects.orderon.RecyclerViewInterface;
 import com.projects.orderon.models.Address;
 
 public class SavedAddressRecyclerAdapter extends RecyclerView.Adapter<SavedAddressRecyclerAdapter.ViewHolder> {
@@ -41,7 +43,7 @@ public class SavedAddressRecyclerAdapter extends RecyclerView.Adapter<SavedAddre
         Log.d(TAG, "SavedAddressList onBindViewHolder holder");
         Address address = addresses.get(position);
         holder.address.setText(address.getStreet() + ", " + address.getCity() + ","
-        + address.getState() + " - " + address.getPincode());
+        + address.getState() + " - " + address.getPin());
         holder.mobile.setText("Mob: " + address.getMobile());
     }
 

@@ -1,10 +1,8 @@
-package com.projects.orderon;
+package com.projects.orderon.fragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -39,6 +37,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.projects.orderon.R;
+import com.projects.orderon.RecyclerViewInterface;
+import com.projects.orderon.adapters.StoresListRecyclerViewAdapter;
 import com.projects.orderon.models.Store;
 
 /**

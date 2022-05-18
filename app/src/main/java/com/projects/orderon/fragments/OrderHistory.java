@@ -1,4 +1,4 @@
-package com.projects.orderon;
+package com.projects.orderon.fragments;
 
 import android.os.Bundle;
 
@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,7 +25,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.projects.orderon.adapters.OrderHistoryRecyclerAdapter;
+import com.projects.orderon.R;
 import com.projects.orderon.models.Address;
 import com.projects.orderon.models.Order;
 import com.projects.orderon.models.OrderItem;
@@ -106,7 +107,7 @@ public class OrderHistory extends Fragment {
 
 
         orders = new ArrayList<Order>();
-        db.collection("users").document(user.getUid()).collection("orders")
+        db.collection("users").document(user.getUid()).collection("orders").orderBy("orderedAt", Query.Direction.DESCENDING)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

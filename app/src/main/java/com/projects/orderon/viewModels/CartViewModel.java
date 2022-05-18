@@ -50,7 +50,9 @@ public class CartViewModel extends ViewModel {
                                         Integer.parseInt(data.get("netPrice").toString()),
                                         Integer.parseInt(data.get("quantity").toString()),
                                         data.get("imgURL").toString(),
-                                        data.get("storeId").toString()
+                                        data.get("storeId").toString(),
+                                        data.get("storeType").toString(),
+                                        data.get("storeName").toString()
                                 ));
                             }
                             cart.setValue(cartItems);
@@ -68,8 +70,8 @@ public class CartViewModel extends ViewModel {
         if(cartItem.contains(item)) {
             int i = cartItem.indexOf(item);
             MenuItem y = cartItem.get(i);
-            y.setQty(item.getQty());
-            y.setNetPrice(item.getQty() * item.getPrice());
+            y.setQuantity(item.getQuantity());
+            y.setNetPrice(item.getQuantity() * item.getPrice());
             cartItem.set(i,y);
             updateValue(item);
         } else {
@@ -88,13 +90,13 @@ public class CartViewModel extends ViewModel {
         int i = cartItem.indexOf(item);
         MenuItem y = cartItem.get(i);
 
-        if(y.getQty() == 0) {
+        if(y.getQuantity() == 0) {
             cartItem.remove(i);
 //                    remove from DB
             removeItem(item);
         } else {
-            y.setQty(item.getQty());
-            y.setNetPrice(item.getQty() * item.getPrice());
+            y.setQuantity(item.getQuantity());
+            y.setNetPrice(item.getQuantity() * item.getPrice());
             cartItem.set(i, y);
             updateValue(item);
         }

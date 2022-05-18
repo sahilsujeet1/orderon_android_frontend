@@ -55,7 +55,7 @@ public class Order {
 
     public String getAddressString() {
         String add = address.getFullName() + ", " + address.getStreet() + ", "
-                + address.getCity() + ", " + address.getState() + " - " + address.getPincode();
+                + address.getCity() + ", " + address.getState() + " - " + address.getPin();
         return add;
     }
 

@@ -1,9 +1,8 @@
-package com.projects.orderon;
+package com.projects.orderon.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +18,12 @@ import com.google.android.material.imageview.ShapeableImageView;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
+import com.projects.orderon.R;
+import com.projects.orderon.RecyclerViewInterface;
 import com.projects.orderon.models.Store;
 
 public class StoresListRecyclerViewAdapter extends RecyclerView.Adapter<StoresListRecyclerViewAdapter.ViewHolder> {

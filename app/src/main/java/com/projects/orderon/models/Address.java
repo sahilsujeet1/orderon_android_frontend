@@ -1,12 +1,10 @@
 package com.projects.orderon.models;
 
-import com.google.gson.annotations.SerializedName;
-
 public class Address {
     String street;
     String city;
     String state;
-    String pincode;
+    String pin;
     String fullName;
 
     public String getFullName() {
@@ -35,7 +33,7 @@ public class Address {
         this.city = city;
         this.state = state;
         this.mobile = mobile;
-        this.pincode = pincode;
+        this.pin = pincode;
     }
 
     public String getStreet() {
@@ -62,11 +60,23 @@ public class Address {
         this.state = state;
     }
 
-    public String getPincode() {
-        return pincode;
+    public String getPin() {
+        return pin;
     }
 
-    public void setPincode(String pincode) {
-        this.pincode = pincode;
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", pincode='" + pin + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", mobile='" + mobile + '\'' +
+                '}';
     }
 }

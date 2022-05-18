@@ -1,4 +1,4 @@
-package com.projects.orderon;
+package com.projects.orderon.fragments;
 
 import android.os.Bundle;
 
@@ -27,6 +27,9 @@ import java.util.Map;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.projects.orderon.R;
+import com.projects.orderon.RecyclerViewInterface;
+import com.projects.orderon.adapters.SavedAddressRecyclerAdapter;
 import com.projects.orderon.models.Address;
 
 /**
@@ -171,13 +174,6 @@ public class Profile extends Fragment {
                 }
             }
         });
-
-//        addresses.add(new Address("Manpur Patwatoli", "Gaya", "Bihar", "823003"));
-//        addresses.add(new Address("Chandigarh University", "Mohali", "Punjab",  "140413"));
-//        addresses.add(new Address("Manpur Patwatoli2", "Gaya2", "Biha2r", "823003"));
-
-
-
 
     }
 

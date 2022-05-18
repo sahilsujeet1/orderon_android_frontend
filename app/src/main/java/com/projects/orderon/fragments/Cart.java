@@ -1,8 +1,7 @@
-package com.projects.orderon;
+package com.projects.orderon.fragments;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
@@ -12,25 +11,19 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.projects.orderon.models.CartItem;
+import com.projects.orderon.adapters.CartRecyclerViewAdapter;
+import com.projects.orderon.R;
 import com.projects.orderon.models.MenuItem;
 import com.projects.orderon.viewModels.CartViewModel;
 
@@ -59,6 +52,7 @@ public class Cart extends Fragment {
     private int totalQty, totalAmount;
     private TextView quantity, amount;
     private CartViewModel cartViewModel;
+    private Button checkout;
 
     public Cart() {
         // Required empty public constructor
@@ -97,6 +91,21 @@ public class Cart extends Fragment {
         view = inflater.inflate(R.layout.fragment_cart, container, false);
         amount = view.findViewById(R.id.cartTotalAmountValue);
         quantity = view.findViewById(R.id.cartTotalQtyValue);
+        checkout = view.findViewById(R.id.checkout);
+
+        checkout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("amount", totalAmount);
+                getParentFragmentManager().setFragmentResult("cartAmount", bundle);
+
+
+                getActivity().getSupportFragmentManager().beginTransaction().
+                        replace(R.id.fragment_container, new AddressPayment()).commit();
+            }
+        });
 
         getCartItems();
 
@@ -119,8 +128,8 @@ public class Cart extends Fragment {
                 totalAmount = 0;
                 totalQty = 0;
                 for(MenuItem item: cartItems) {
-                    totalAmount += (item.getPrice() * item.getQty());
-                    totalQty += item.getQty();
+                    totalAmount += (item.getPrice() * item.getQuantity());
+                    totalQty += item.getQuantity();
                 }
 
                 amount.setText(Integer.toString(totalAmount));
