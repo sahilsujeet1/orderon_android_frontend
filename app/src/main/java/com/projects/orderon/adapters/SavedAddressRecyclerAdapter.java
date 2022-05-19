@@ -7,12 +7,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.projects.orderon.R;
 import com.projects.orderon.RecyclerViewInterface;
 import com.projects.orderon.models.Address;
@@ -21,6 +32,7 @@ public class SavedAddressRecyclerAdapter extends RecyclerView.Adapter<SavedAddre
 
     private static final String TAG = "savedAddListAdapter";
     private final RecyclerViewInterface recyclerViewInterface;
+    private FirebaseUser user;
 
     private ArrayList<Address> addresses = new ArrayList<Address>();
     private Context context;
@@ -29,6 +41,7 @@ public class SavedAddressRecyclerAdapter extends RecyclerView.Adapter<SavedAddre
         this.addresses = addressParameter;
         this.context = ctx;
         this.recyclerViewInterface = rVI;
+        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @NonNull
@@ -65,14 +78,21 @@ public class SavedAddressRecyclerAdapter extends RecyclerView.Adapter<SavedAddre
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.d(TAG, "onClick: Remove btn clicked");
-                    if(rVI != null) {
-                        int pos = getAdapterPosition();
-
-                        if(pos != RecyclerView.NO_POSITION) {
-                            rVI.onItemClick(pos);
+                    int pos = getAdapterPosition();
+                    FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                            .collection("addresses").document(addresses.get(pos).getID()).delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            addresses.remove(addresses.get(pos));
+                            notifyDataSetChanged();
                         }
-                    }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(itemView.getContext(), "Address deletion failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             });
         }

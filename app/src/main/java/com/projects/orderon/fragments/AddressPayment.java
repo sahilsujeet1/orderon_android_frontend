@@ -182,7 +182,7 @@ public class AddressPayment extends Fragment implements RecyclerViewInterface {
                     addresses = new ArrayList<>();
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Map<String, Object> address = document.getData();
-                        addresses.add(new Address(address.get("fullName").toString(), address.get("street").toString(), address.get("city").toString(),
+                        addresses.add(new Address(document.getId(), address.get("fullName").toString(), address.get("street").toString(), address.get("city").toString(),
                                 address.get("state").toString(), address.get("pin").toString(), address.get("mobile").toString()));
                     }
 

@@ -6,6 +6,7 @@ public class Address {
     String state;
     String pin;
     String fullName;
+    String id;
 
     public String getFullName() {
         return fullName;
@@ -35,6 +36,18 @@ public class Address {
         this.mobile = mobile;
         this.pin = pincode;
     }
+
+    public Address(String addId, String fullName, String street, String city, String state, String pincode, String mobile) {
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.pin = pincode;
+        this.fullName = fullName;
+        this.id = addId;
+        this.mobile = mobile;
+    }
+
+    public String getID() { return id; }
 
     public String getStreet() {
         return street;
