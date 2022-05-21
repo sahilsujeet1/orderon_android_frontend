@@ -1,8 +1,10 @@
 package com.projects.orderon.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,9 +23,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,15 +40,19 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
+import com.paytm.pgsdk.PaytmOrder;
+import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
+import com.paytm.pgsdk.TransactionManager;
 import com.projects.orderon.R;
 import com.projects.orderon.RecyclerViewInterface;
-import com.projects.orderon.adapters.SavedAddressRecyclerAdapter;
 import com.projects.orderon.adapters.SelectAddressRecyclerViewAdapter;
 import com.projects.orderon.models.Address;
 import com.projects.orderon.models.MenuItem;
 import com.projects.orderon.models.Store;
 import com.projects.orderon.viewModels.CartViewModel;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -58,6 +69,12 @@ import java.util.Map;
 public class AddressPayment extends Fragment implements RecyclerViewInterface {
 
     private static final String TAG = "AddressPayment";
+    private static final String MID = "NqTKuA63797783011362";
+//    private static final String MID = "EscBDe97704260989472";
+
+    private static final String CALLBACKURL = "https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=";
+//    private static final String CALLBACKURL = "http://localhost:3000/paytmGateway/verifyPayment/";
+    private static final int paytmRequestCode = 5;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -80,8 +97,9 @@ public class AddressPayment extends Fragment implements RecyclerViewInterface {
     private CartViewModel cartViewModel;
     private Address selectedAddress;
     private String paymentMode = "";
-    private int totalAmonut;
+    private int totalAmount;
     String custOrderID, sellerOrderID;
+    private ArrayList<MenuItem> cartItems;
     Timestamp now;
 
     public AddressPayment() {
@@ -126,8 +144,8 @@ public class AddressPayment extends Fragment implements RecyclerViewInterface {
         getParentFragmentManager().setFragmentResultListener("cartAmount", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
-                totalAmonut = bundle.getInt("amount");
-                Log.d(TAG, "onFragmentResult: AMOUNT: " + totalAmonut);
+                totalAmount = bundle.getInt("amount");
+                Log.d(TAG, "onFragmentResult: AMOUNT: " + totalAmount);
             }
         });
 
@@ -217,16 +235,18 @@ public class AddressPayment extends Fragment implements RecyclerViewInterface {
 
     private void placeOrder() {
         Log.d(TAG, "placeOrder: INSIDE PLACE ORDER");
-        ArrayList<MenuItem> cartItems = cartViewModel.cart.getValue();
+        cartItems = cartViewModel.cart.getValue();
         custOrderID = generateID();
         sellerOrderID = custOrderID;
 
         progressBar.setVisibility(View.VISIBLE);
 
-        ArrayList<Map<String, Object>> orderDetailsCust = orderSeller(cartItems, paymentMode, selectedAddress,currentUser.getUid(), "");
-        String finalCustOrderID = orderCustomer(orderDetailsCust, currentUser.getUid(), paymentMode, selectedAddress, "");
-
-
+        if(paymentMode.equals("COD")) {
+            ArrayList<Map<String, Object>> orderDetailsCust = orderSeller(cartItems, paymentMode, selectedAddress,currentUser.getUid(), null);
+            String finalCustOrderID = orderCustomer(orderDetailsCust, currentUser.getUid(), paymentMode, selectedAddress, null);
+        } else if(paymentMode.equals("Online")) {
+            orderOnline();
+        }
     }
 
     private String generateID() {
@@ -256,7 +276,7 @@ public class AddressPayment extends Fragment implements RecyclerViewInterface {
         return randomstring;
     }
 
-    private ArrayList<Map<String, Object>> orderSeller(ArrayList<MenuItem> cart, String mode, Address address, String uid, String txnDetails) {
+    private ArrayList<Map<String, Object>> orderSeller(ArrayList<MenuItem> cart, String mode, Address address, String uid, Map<String, Object> txnDetails) {
 
         Log.d(TAG, "orderSeller: INSIDE ORDER SELLER");
 
@@ -316,7 +336,7 @@ public class AddressPayment extends Fragment implements RecyclerViewInterface {
         return orderDetails;
     }
 
-    private String orderCustomer(ArrayList<Map<String, Object>> orderDetailsCust, String uid, String mode, Address selectedAddress, String txnDetails) {
+    private String orderCustomer(ArrayList<Map<String, Object>> orderDetailsCust, String uid, String mode, Address selectedAddress, Map<String, Object> txnDetails) {
 
         Log.d(TAG, "orderCustomer: INSIDE ORDER CUSTOMER");
         Log.d(TAG, "orderCustomer: FROM SELLER" + orderDetailsCust.toString());
@@ -324,7 +344,7 @@ public class AddressPayment extends Fragment implements RecyclerViewInterface {
         Map<String, Object> content = new HashMap<>();
 
         content.put("orders", orderDetailsCust);
-        content.put("totAmount", totalAmonut);
+        content.put("totAmount", totalAmount);
         content.put("mode", mode);
         content.put("txnDetails", txnDetails);
         content.put("orderedAt", now);
@@ -373,74 +393,144 @@ public class AddressPayment extends Fragment implements RecyclerViewInterface {
         });
     }
 
-//    public void onlineCheckout() {
-////        PaytmPaymentsUtilRepository paymentsUtilRepository = PaytmSDK.getPaymentsUtilRepository()
-//    }
-//
-//    void initiateTransaction() {
-//
-//        try {
-//            JSONObject paytmParams = new JSONObject();
-//
-//            JSONObject body = new JSONObject();
-//            body.put("requestType", "Payment");
-//            body.put("mid", "YOUR_MID_HERE");
-//            body.put("websiteName", "YOUR_WEBSITE_NAME");
-//            body.put("orderId", "ORDERID_98765");
-//            body.put("callbackUrl", "https://<callback URL to be used by merchant>");
-//
-//            JSONObject txnAmount = new JSONObject();
-//            txnAmount.put("value", "1.00");
-//            txnAmount.put("currency", "INR");
-//
-//            JSONObject userInfo = new JSONObject();
-//            userInfo.put("custId", "CUST_001");
-//            body.put("txnAmount", txnAmount);
-//            body.put("userInfo", userInfo);
-//
-//
-//            String checksum = PaytmChecksum.generateSignature(body.toString(), "YOUR_MERCHANT_KEY");
-//
-//            JSONObject head = new JSONObject();
-//            head.put("signature", checksum);
-//
-//            paytmParams.put("body", body);
-//            paytmParams.put("head", head);
-//
-//            String post_data = paytmParams.toString();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//
-//        /* for Staging */
-//        URL url = new URL("https://securegw-stage.paytm.in/theia/api/v1/initiateTransaction?mid=YOUR_MID_HERE&orderId=ORDERID_98765");
-//
-//        /* for Production */
-//// URL url = new URL("https://securegw.paytm.in/theia/api/v1/initiateTransaction?mid=YOUR_MID_HERE&orderId=ORDERID_98765");
-//
-//        try {
-//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//            connection.setRequestMethod("POST");
-//            connection.setRequestProperty("Content-Type", "application/json");
-//            connection.setDoOutput(true);
-//
-//            DataOutputStream requestWriter = new DataOutputStream(connection.getOutputStream());
-//            requestWriter.writeBytes(post_data);
-//            requestWriter.close();
-//            String responseData = "";
-//            InputStream is = connection.getInputStream();
-//            BufferedReader responseReader = new BufferedReader(new InputStreamReader(is));
-//            if ((responseData = responseReader.readLine()) != null) {
-//                System.out.append("Response: " + responseData);
-//            }
-//            responseReader.close();
-//        } catch (Exception exception) {
-//            exception.printStackTrace();
-//        }
-//
-//
-//
-//    }
+    private void orderOnline() {
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        String url = "https://orderon-backend.herokuapp.com/paytmGateway/genCheckSum/";
+//        String url = "http://localhost:3000/paytmGateway/genCheckSum";
+        Map<String, String> params = new HashMap<>();
+        params.put("orderID", custOrderID);
+        params.put("custId", currentUser.getUid());
+        params.put("amount", Integer.toString(totalAmount));
+        JSONObject jsonParam = new JSONObject(params);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST, url, jsonParam,
+                new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Log.d(TAG, "onResponse: JSON_RESPONSE: " + response.toString());
+                    JSONObject resBody = response.getJSONObject("body");
+                    JSONObject resHead = response.getJSONObject("head");
+                    String clientId = currentUser.getUid();
+                    String txnToken = resBody.getString("txnToken");
+
+                    PaytmOrder paytmOrder = new PaytmOrder(custOrderID, MID, txnToken, Integer.toString(totalAmount), CALLBACKURL+custOrderID);
+
+                    TransactionManager transactionManager = new TransactionManager(paytmOrder, new PaytmPaymentTransactionCallback() {
+
+                        @Override
+                        public void onTransactionResponse(@Nullable Bundle response) {
+//                            Toast.makeText(getContext(), "Payment Transaction response " + inResponse.toString(), Toast.LENGTH_LONG).show();
+                            Log.d(TAG, "onActivityResult: Redirect Response: " + response.toString());
+                            storeDataAfterOnlinePayment(null, response, "redirect");
+                        }
+
+                        @Override
+                        public void networkNotAvailable() {
+
+                        }
+
+                        @Override
+                        public void onErrorProceed(String s) {
+
+                        }
+
+                        @Override
+                        public void clientAuthenticationFailed(String s) {
+
+                        }
+
+                        @Override
+                        public void someUIErrorOccurred(String s) {
+
+                        }
+
+                        @Override
+                        public void onErrorLoadingWebPage(int i, String s, String s1) {
+
+                        }
+
+                        @Override
+                        public void onBackPressedCancelTransaction() {
+
+                        }
+
+                        @Override
+                        public void onTransactionCancel(String s, Bundle bundle) {
+
+                        }
+                    });
+
+                    transactionManager.setAppInvokeEnabled(true);
+                    transactionManager.setShowPaymentUrl("https://securegw-stage.paytm.in/theia/api/v1/showPaymentPage");
+                    transactionManager.startTransaction(getActivity(), paytmRequestCode);
+                    if(clientId.length() > 0)
+                        transactionManager.startTransactionAfterCheckingLoginStatus(getActivity(), clientId, paytmRequestCode);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: Error in sending request" + error.toString());
+            }
+        }
+        );
+
+        requestQueue.add(jsonObjectRequest);
+
+    }
+
+    private void storeDataAfterOnlinePayment(@Nullable String response, @Nullable Bundle res, String respType) {
+
+        try {
+            if(respType.equals("app")) {
+                JSONObject resp = new JSONObject(response.toString());
+                if(resp.getString("STATUS").equals("TXN_SUCCESS")) {
+                    Map<String, Object> txnDetails = new HashMap<>();
+                    txnDetails.put("bankTransId", resp.getString("BANKTXNID"));
+                    txnDetails.put("transDate", resp.getString("TXNDATE"));
+                    txnDetails.put("transId", resp.getString("TXNID"));
+
+                    Log.d(TAG, "storeDataAfterOnlinePayment: SUCCESS");
+
+                ArrayList<Map<String, Object>> orderDetailsCust = orderSeller(cartItems, paymentMode, selectedAddress,currentUser.getUid(), txnDetails);
+                String finalCustOrderID = orderCustomer(orderDetailsCust, currentUser.getUid(), paymentMode, selectedAddress, txnDetails);
+                } else {
+                    Toast.makeText(getContext(), "An error occurred. Amount will be refunded if deducted.", Toast.LENGTH_LONG).show();
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, new Cart()).commit();
+                    progressBar.setVisibility(View.GONE);
+                }
+            } else {
+                if(res != null && res.getString("STATUS").equals("TXN_SUCCESS")) {
+                    Map<String, Object> txnDetails = new HashMap<>();
+                    txnDetails.put("bankTransId", res.getString("BANKTXNID"));
+                    txnDetails.put("transDate", res.getString("TXNDATE"));
+                    txnDetails.put("transId", res.getString("TXNID"));
+
+                    Log.d(TAG, "storeDataAfterOnlinePayment: SUCCESS");
+
+                    ArrayList<Map<String, Object>> orderDetailsCust = orderSeller(cartItems, paymentMode, selectedAddress,currentUser.getUid(), txnDetails);
+                    String finalCustOrderID = orderCustomer(orderDetailsCust, currentUser.getUid(), paymentMode, selectedAddress, txnDetails);
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == paytmRequestCode && data != null) {
+            Log.d(TAG, "onActivityResult: " + data.getStringExtra("nativeSdkForMerchantMessage") + data.getStringExtra("response"));
+            storeDataAfterOnlinePayment(data.getStringExtra("response"), null, "app");
+        }
+    }
 }

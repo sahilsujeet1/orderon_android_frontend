@@ -161,7 +161,7 @@ public class StoresList extends Fragment implements RecyclerViewInterface {
                         recyclerView.setLayoutManager(layoutManager);
                         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-                        stores = new ArrayList<Store>();
+                        stores = new ArrayList<>();
 
                         final GeoLocation center = new GeoLocation(currLat, currLong);
                         final double radiusInM = 10 * 1000;
@@ -204,6 +204,7 @@ public class StoresList extends Fragment implements RecyclerViewInterface {
 
                                         for(DocumentSnapshot doc:matchingDocs) {
                                             Map<String, Object> store = doc.getData();
+                                            Log.d(TAG, "onComplete: Stores: " + doc.getId() + " : " + store.toString());
                                             stores.add(new Store(
                                                     doc.getId(),
                                                     store.get("name").toString(),
@@ -261,8 +262,7 @@ public class StoresList extends Fragment implements RecyclerViewInterface {
         getParentFragmentManager().setFragmentResult("storeData", bundle);
 
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new StoreMenu())
-                .addToBackStack(null).commit();
+                .replace(R.id.fragment_container, new StoreMenu()).commit();
 
         Log.d("StoresList", "onItemClick: " + (position+1));
     }

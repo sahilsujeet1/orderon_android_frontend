@@ -8,11 +8,12 @@
     android:padding="5dp"
     android:layout_marginBottom="10dp">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/orderItemImage"
         android:layout_width="99dp"
         android:layout_height="82dp"
         android:scaleType="fitXY"
+        app:shapeAppearanceOverlay="@style/roundedImageView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

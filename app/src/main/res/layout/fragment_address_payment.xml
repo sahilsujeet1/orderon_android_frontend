@@ -136,13 +136,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-<!--                    <RadioButton-->
-<!--                        android:id="@+id/online"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:background="@drawable/order_item_bg"-->
-<!--                        android:text="Online"-->
-<!--                        android:textColor="@color/textColor" />-->
+                    <RadioButton
+                        android:id="@+id/online"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/order_item_bg"
+                        android:text="Online"
+                        android:textColor="@color/textColor" />
 
                     <RadioButton
                         android:id="@+id/cod"

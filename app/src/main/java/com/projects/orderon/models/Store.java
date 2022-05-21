@@ -14,8 +14,6 @@ public class Store {
         imageURL = "";
     }
 
-
-
     public Store(String id, String name, String address, String type, String url) {
         storeId = id;
         storeAddress = address;

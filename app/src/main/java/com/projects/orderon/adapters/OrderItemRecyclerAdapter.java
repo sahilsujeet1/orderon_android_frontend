@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.projects.orderon.R;
 import com.projects.orderon.models.OrderItem;
 
@@ -57,7 +57,7 @@ public class OrderItemRecyclerAdapter extends RecyclerView.Adapter<OrderItemRecy
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView itemName, seller;
         TextView qty, amount;
-        ImageView img;
+        ShapeableImageView img;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
